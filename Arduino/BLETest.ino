@@ -13,7 +13,7 @@ BLECharacteristic* pCharacteristicTx = NULL;
 //BLECharacteristic* pCharacteristicRx = NULL;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
-
+int ReadCount =0;
 // 回调函数：连接、断开时的处理
 class MyServerCallbacks: public BLEServerCallbacks {
   void onConnect(BLEServer* pServer) {
@@ -60,7 +60,8 @@ class CharacteristicCallbacks: public BLECharacteristicCallbacks {
 
       void onRead(BLECharacteristic* pCharacteristic) {
         // 当主机读取该特征值时，此函数会被调用
-        Serial.println("onRead.");
+        ReadCount++;
+        Serial.println("onRead:" + String(ReadCount) );
         // 核心逻辑：读取完成后，清空特征值的数据
         // 注意：这里只是清空了BLE特征值当前缓存的数据。
         // 您需要同时清空您的数据源（如全局变量g_sensorData）

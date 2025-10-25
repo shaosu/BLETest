@@ -1,11 +1,6 @@
 ﻿using BLETest1.ViewModel;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 
 namespace BLETest1
@@ -25,13 +20,13 @@ namespace BLETest1
 
         /// <summary>
         /// 当前蓝牙服务特征列表
-        /// </summary>
+        /// </summary>  
         List<GattCharacteristic> GattCharacteristics = new List<GattCharacteristic>();
 
         public Form1()
         {
             InitializeComponent();
-
+  
             CheckForIllegalCrossThreadCalls = false;
             this.bleCore.MessageChanged += BleCore_MessAgeChanged;
             this.bleCore.DevicewatcherChanged += BleCore_DeviceWatcherChanged;
@@ -80,15 +75,6 @@ namespace BLETest1
             Closing = true;
             bleCore.Dispose();
         }
-
-        // 异步线程
-        public static void RunAsync(Action action)
-        {
-            ((Action)(delegate ()
-            {
-                action.Invoke();
-            })).BeginInvoke(null, null);
-        }
         private const string Search = "扫描";
 
         /// <summary>
@@ -126,10 +112,10 @@ namespace BLETest1
         private void BleCore_MessAgeChanged(MsgType type, string message, byte[] data)
         {
             if (Closing) return;
-            RunAsync(() =>
-            {
-                this.listboxMessage.Items.Add(message);
-            });
+            //RunAsync(() =>
+            //{
+            this.listboxMessage.Items.Add(message);
+            //});
         }
 
         /// <summary>
@@ -138,12 +124,9 @@ namespace BLETest1
         private void BleCore_DeviceWatcherChanged(MsgType type, Windows.Devices.Bluetooth.BluetoothLEDevice bluetoothLEDevice)
         {
             if (Closing) return;
-            RunAsync(() =>
-            {
-                this.listboxBleDevice.Items.Add(bluetoothLEDevice.Name);
-                this.DeviceList.Add(bluetoothLEDevice);
 
-            });
+            this.listboxBleDevice.Items.Add(bluetoothLEDevice.Name);
+            this.DeviceList.Add(bluetoothLEDevice);
         }
 
         /// <summary>
@@ -295,8 +278,6 @@ namespace BLETest1
             List<byte> buffer = StringToArray(str);
             this.bleCore.Write(buffer.ToArray());
         }
-
-
 
         //断开
         private void btn_DisConnect_Click(object sender, EventArgs e)
