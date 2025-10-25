@@ -86,12 +86,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DrawerDialogService\DrawerDialogService.csproj">
-      <Project>{4c087374-c26b-4b0d-bb0b-a314d1a889a8}</Project>
-      <Name>DrawerDialogService</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
       <Version>10.0.22000.196</Version>
     </PackageReference>
@@ -99,5 +93,6 @@
       <Version>5.4.1.1</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
