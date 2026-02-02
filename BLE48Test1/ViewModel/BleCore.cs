@@ -89,7 +89,7 @@ namespace BLETest1.ViewModel
         /// <summary>
         /// 当前连接的蓝牙设备
         /// </summary>
-        public BluetoothLEDevice CurrentDevice { get; set; }
+        public MyBluetoothLEDeviceEx CurrentDevice { get; set; }
 
         /// <summary>
         /// 写特征对象
@@ -115,19 +115,22 @@ namespace BLETest1.ViewModel
         /// <summary>
         /// 存储检测到的设备
         /// </summary>
-        private List<BluetoothLEDevice> DevicesList = new List<BluetoothLEDevice>();
+        private List<MyBluetoothLEDeviceEx> DevicesList = new List<MyBluetoothLEDeviceEx>();
 
         /// <summary>
         /// 定义搜索蓝牙设备委托
         /// </summary>
         /// <param name="type"></param>
         /// <param name="bluetoothLEDevice"></param>
-        public delegate void DevicewatcherChangedEvent(MsgType type, BluetoothLEDevice bluetoothLEDevice);
+        public delegate void DevicewatcherChangedEvent(MsgType type, MyBluetoothLEDeviceEx bluetoothLEDevice);
+
+        public delegate void DeviceRSSIChangedChangedEvent(MyBluetoothLEDeviceEx bluetoothLEDevice, short rssi);
 
         /// <summary>
         /// 搜索蓝牙事件
         /// </summary>
         public event DevicewatcherChangedEvent DevicewatcherChanged;
+        public event DeviceRSSIChangedChangedEvent DeviceRSSIChangedChanged;
 
         /// <summary>
         /// 获取服务委托
@@ -167,7 +170,7 @@ namespace BLETest1.ViewModel
         /// <summary>
         /// 当前连接蓝牙的Mac
         /// </summary>
-        private string CurrentDeviceMAC { get; set; }
+        private string CurrentDeviceMAC { get { return CurrentDevice.MAC; } }
 
         public BleCore()
         {
@@ -271,21 +274,43 @@ namespace BLETest1.ViewModel
                         }
 
                         Boolean contain = false;
-                        foreach (BluetoothLEDevice device in DevicesList)//过滤重复的设备
+                        MyBluetoothLEDeviceEx curEx = null;
+                        foreach (MyBluetoothLEDeviceEx device in DevicesList)//过滤重复的设备
                         {
-                            if (device.DeviceId == currentDevice.DeviceId)
+                            if (device.BLE.DeviceId == currentDevice.DeviceId)
                             {
                                 contain = true;
+                                curEx = device;
                             }
                         }
-                        if (!contain)
+                        if (contain == false)
                         {
                             byte[] _Bytes1 = BitConverter.GetBytes(currentDevice.BluetoothAddress);
                             Array.Reverse(_Bytes1);
-                            string address = BitConverter.ToString(_Bytes1, 2, 6).Replace('-', ':').ToLower();
-                            this.DevicesList.Add(currentDevice);
-                            this.MessageChanged(MsgType.NotifyTxt, "发现设备：" + currentDevice.Name + "  address:" + address);
-                            this.DevicewatcherChanged(MsgType.BleDevice, currentDevice);
+                            string mac = BitConverter.ToString(_Bytes1, 2, 6).Replace('-', ':').ToLower();
+                            var rssi = eventArgs.RawSignalStrengthInDBm;
+                            string blName = currentDevice.Name;
+                            MyBluetoothLEDeviceEx bleEx = new MyBluetoothLEDeviceEx();
+                            bleEx.BLE = currentDevice;
+                            bleEx.MAC = mac;
+                            bleEx.RSSI = rssi;
+                            bleEx.Name = blName;
+
+                            this.DevicesList.Add(bleEx);
+                            this.MessageChanged(MsgType.NotifyTxt, "发现设备：" + currentDevice.Name + "  address:" + mac + " rssi:" + rssi);
+                            this.DevicewatcherChanged(MsgType.BleDevice, bleEx);
+                        }
+                        else
+                        {
+                            if (curEx != null)
+                            {
+                                if (curEx.RSSI != eventArgs.RawSignalStrengthInDBm)
+                                {
+                                    curEx.RSSI = eventArgs.RawSignalStrengthInDBm;
+                                    DeviceRSSIChangedChanged?.Invoke(curEx, curEx.RSSI);
+                                }
+
+                            }
                         }
                     }
 
@@ -340,7 +365,7 @@ namespace BLETest1.ViewModel
         /// 匹配
         /// </summary>
         /// <param name="device"></param>
-        public void StartMatching(BluetoothLEDevice device)
+        public void StartMatching(MyBluetoothLEDeviceEx device)
         {
             this.CurrentDevice = device;
         }
@@ -357,7 +382,7 @@ namespace BLETest1.ViewModel
                 this.GattDeviceServiceAdded(ser);
             }*/
 
-            this.CurrentDevice.GetGattServicesAsync().Completed = async (asyncInfo, asyncStatu) =>
+            this.CurrentDevice.BLE.GetGattServicesAsync().Completed = async (asyncInfo, asyncStatu) =>
             {
                 if (asyncStatu == AsyncStatus.Completed)
                 {
@@ -396,7 +421,8 @@ namespace BLETest1.ViewModel
 
 
         /// <summary>
-        /// 获取操作
+        /// 获取操作,
+        /// TODO:同时控制几个特征,然后连接
         /// </summary>
         /// <param name="gattCharacteristic"></param>
         /// <returns></returns>
@@ -431,31 +457,26 @@ namespace BLETest1.ViewModel
 
         private async Task Connect()
         {
-            byte[] _Bytes1 = BitConverter.GetBytes(this.CurrentDevice.BluetoothAddress);
-            Array.Reverse(_Bytes1);
-            this.CurrentDeviceMAC = BitConverter.ToString(_Bytes1, 2, 6).Replace('-', ':').ToLower();
-
             string msg = "正在连接设备<" + this.CurrentDeviceMAC + "> ..";
             this.MessageChanged(MsgType.NotifyTxt, msg);
-            this.CurrentDevice.ConnectionStatusChanged += CurrentDevice_ConnectionStatusChanged;
-
+            this.CurrentDevice.BLE.ConnectionStatusChanged += CurrentDevice_ConnectionStatusChanged;
+            this.IsConnect = true;
         }
-        bool IsConnect = false;
+        public bool IsConnect = false;
         /// <summary>
         /// 主动断开连接
         /// </summary>
         public void DisConnect()
         {
             IsConnect = false;
-            CurrentDeviceMAC = null;
 
             //使用到的服务 （我这里仅仅使用了一个服务）
             CurrentService?.Dispose();
             //蓝牙
             if (CurrentDevice != null)
-                CurrentDevice.ConnectionStatusChanged -= CurrentDevice_ConnectionStatusChanged;
+                CurrentDevice.BLE.ConnectionStatusChanged -= CurrentDevice_ConnectionStatusChanged;
             //关闭
-            CurrentDevice?.Dispose();
+            CurrentDevice?.BLE?.Dispose();
 
             CurrentDevice = null;
             CurrentService = null;
@@ -479,7 +500,7 @@ namespace BLETest1.ViewModel
                 if (!asyncLock)
                 {
                     asyncLock = true;
-                    this.CurrentDevice.Dispose();
+                    this.CurrentDevice.BLE.Dispose();
                     this.CurrentDevice = null;
 
                     this.CurrentNotifyCharacteristic = null;
@@ -515,13 +536,23 @@ namespace BLETest1.ViewModel
                             return;
                         }
 
-                        BluetoothLEDevice tmp = this.DevicesList.Where(p => p.Name == bleDevice.Name).FirstOrDefault();
+                        byte[] _Bytes1 = BitConverter.GetBytes(bleDevice.BluetoothAddress);
+                        Array.Reverse(_Bytes1);
+                        string macAddress = BitConverter.ToString(_Bytes1, 2, 6).Replace('-', ':').ToLower();
+
+
+
+                        MyBluetoothLEDeviceEx tmp2 = new MyBluetoothLEDeviceEx();
+                        tmp2.Name = bleDevice.Name;
+                        tmp2.MAC = macAddress;
+
+                        MyBluetoothLEDeviceEx tmp = this.DevicesList.Where(p => p.Name == bleDevice.Name).FirstOrDefault();
                         if (tmp == null)
                         {//没有添加过
                          //  bool state = IsConnectable(bleDevice.DeviceInformation);
-                            this.DevicesList.Add(bleDevice);
+                            this.DevicesList.Add(tmp2);
 
-                            this.DevicewatcherChanged(MsgType.BleDevice, bleDevice);
+                            this.DevicewatcherChanged(MsgType.BleDevice, tmp2);
                         }
                     }
                 };
@@ -540,9 +571,9 @@ namespace BLETest1.ViewModel
         /// </summary>
         public void Dispose()
         {
-            CurrentDeviceMAC = null;
+
             CurrentService?.Dispose();
-            CurrentDevice?.Dispose();
+            CurrentDevice?.BLE?.Dispose();
 
             CurrentDevice = null;
             CurrentService = null;
@@ -558,7 +589,6 @@ namespace BLETest1.ViewModel
         /// <returns></returns>
         public async Task SelectDeviceFromIdAsync(string MAC)
         {
-            CurrentDeviceMAC = MAC;
             CurrentDevice = null;
 
             BluetoothAdapter.GetDefaultAsync().Completed = async (asyncInfo, asyncStatus) =>
@@ -585,7 +615,7 @@ namespace BLETest1.ViewModel
         /// <returns></returns>
         public async Task EnableNotifications(GattCharacteristic characteristic)
         {
-            string msg = "收通知对象=" + CurrentDevice.ConnectionStatus;
+            string msg = "收通知对象=" + CurrentDevice.BLE.ConnectionStatus;
             this.MessageChanged(MsgType.NotifyTxt, msg);
 
             characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(CHARACTERSITIC_NOTIFICATION_TYPE).Completed = async (asyncInfo, asyncStatus) =>
@@ -616,7 +646,7 @@ namespace BLETest1.ViewModel
         {
             byte[] data;
             CryptographicBuffer.CopyToByteArray(args.CharacteristicValue, out data);
-            string str = ASCIIEncoding.UTF8.GetString(data);
+            string str = ASCIIEncoding.UTF8.GetString(data).Replace("\0", string.Empty);
             string hex = string.Join(" ", data.Select(a => a.ToString("X2")).ToArray());
             string format = $"通知:{str}  =>Hex:{hex}";
             this.MessageChanged(MsgType.BleRecData, format, data);

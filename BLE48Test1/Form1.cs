@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
+using Windows.UI.Xaml.Controls;
 
 namespace BLETest1
 {
@@ -16,7 +17,7 @@ namespace BLETest1
         /// <summary>
         /// 存储检测到的设备
         /// </summary>
-        List<Windows.Devices.Bluetooth.BluetoothLEDevice> DeviceList = new List<Windows.Devices.Bluetooth.BluetoothLEDevice>();
+        List<MyBluetoothLEDeviceEx> DeviceList = new List<MyBluetoothLEDeviceEx>();
 
         /// <summary>
         /// 当前蓝牙服务列表
@@ -37,8 +38,12 @@ namespace BLETest1
             this.bleCore.DevicewatcherChanged += BleCore_DeviceWatcherChanged;
             this.bleCore.GattDeviceServiceAdded += BleCore_GattDeviceServiceAdded;
             this.bleCore.CharacteristicAdded += BleCore_CharacteristicAdded;
+            this.bleCore.DeviceRSSIChangedChanged += BleCore_DeviceRSSIChangedChanged;
             this.Init();
         }
+
+
+
         private void Init()
         {
             this.Load += BlueForm_Load;
@@ -135,15 +140,55 @@ namespace BLETest1
         /// <summary>
         /// 搜索蓝牙设备列表
         /// </summary>
-        private void BleCore_DeviceWatcherChanged(MsgType type, Windows.Devices.Bluetooth.BluetoothLEDevice bluetoothLEDevice)
+        private void BleCore_DeviceWatcherChanged(MsgType type, MyBluetoothLEDeviceEx bluetoothLEDevice)
         {
             if (Closing) return;
             RunAsync(() =>
             {
-                this.listboxBleDevice.Items.Add(bluetoothLEDevice.Name);
+                this.listboxBleDevice.Items.Add(bluetoothLEDevice);
                 this.DeviceList.Add(bluetoothLEDevice);
 
             });
+        }
+
+
+        private MyBluetoothLEDeviceEx FindFromListBox(ulong BluetoothAddress, short rssi, out int index)
+        {
+            index = -1;
+            for (int i = 0; i < listboxBleDevice.Items.Count; i++)
+            {
+                MyBluetoothLEDeviceEx dev = listboxBleDevice.Items[i] as MyBluetoothLEDeviceEx;
+                if (dev != null && dev.BLE.BluetoothAddress == BluetoothAddress)
+                {
+                    dev.RSSI = rssi;
+                    index = i;
+                    return dev;
+                }
+            }
+            return null;
+        }
+
+        private void BleCore_DeviceRSSIChangedChanged(MyBluetoothLEDeviceEx ble, short rssi)
+        {
+            int index;
+            var dev = FindFromListBox(ble.BLE.BluetoothAddress, rssi, out index);
+            if (dev != null)
+            {
+                dev.RSSI = rssi;
+                listboxBleDevice.BeginUpdate();
+                listboxBleDevice.Items.Clear();
+                // 添加新项
+                foreach (var person in DeviceList)
+                {
+                    listboxBleDevice.Items.Add(person);
+                }
+
+                listboxBleDevice.EndUpdate();
+
+                // 或者强制重绘
+                listboxBleDevice.Refresh();
+
+            }
         }
 
         /// <summary>
@@ -301,17 +346,10 @@ namespace BLETest1
         //断开
         private void btn_DisConnect_Click(object sender, EventArgs e)
         {
-            if (this.listboxBleDevice.SelectedItem != null)
+            if (this.bleCore.IsConnect)
             {
                 //找到在蓝牙列表里面执行当前蓝牙的对象
-                string deviceName = this.listboxBleDevice.SelectedItem.ToString();
-                Windows.Devices.Bluetooth.BluetoothLEDevice bluetoothLEDevice =
-                    this.DeviceList.Where(u => u.Name == deviceName).FirstOrDefault();
-
-                if (bluetoothLEDevice != null)
-                {//从列表中移除
-                    this.DeviceList.Remove(bluetoothLEDevice);
-                }
+                MyBluetoothLEDeviceEx bleEx = this.bleCore.CurrentDevice;
 
                 //关闭该蓝牙的所有服务
                 foreach (var sev in GattDeviceServices)
@@ -321,14 +359,14 @@ namespace BLETest1
                 //并清空
                 GattDeviceServices.Clear();
                 GattCharacteristics.Clear();
-
-                if (bluetoothLEDevice != null)
-                {//关闭列表中的蓝牙
-                    bluetoothLEDevice.Dispose();
-                }
-                bluetoothLEDevice = null;
                 //蓝牙类的关闭
                 this.bleCore.DisConnect();
+
+                //if (bleEx != null)
+                //{//关闭列表中的蓝牙
+                //    bleEx.BLE.Dispose();
+                //}
+                //bleEx = null;
             }
 
             cmbServer.Items.Clear();
@@ -338,35 +376,31 @@ namespace BLETest1
             cmbFeatures.Items.Clear();
             cmbFeatures.SelectedIndex = -1;
             cmbFeatures.Text = string.Empty;
-            listboxBleDevice.Items.Clear();
             //释放内存
             GC.Collect();
         }
 
         private void listboxBleDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (listboxBleDevice.SelectedIndex == -1) return;
+
             if (this.listboxBleDevice.SelectedItem == null)
             {
                 listboxMessage.Items.Add("请选择连接的蓝牙");
                 return;
             }
+            if (bleCore.IsConnect) return;
 
-            string deviceName = this.listboxBleDevice.SelectedItem.ToString();
-            Windows.Devices.Bluetooth.BluetoothLEDevice bluetoothLEDevice = this.DeviceList.Where(u => u.Name == deviceName).FirstOrDefault();
-
-            if (bluetoothLEDevice == null)
+            MyBluetoothLEDeviceEx ble = this.listboxBleDevice.SelectedItem as MyBluetoothLEDeviceEx;
+            if (ble == null)
             {
                 listboxMessage.Items.Add("没有发现此蓝牙，请重新搜索");
                 txt_SelectedBL.Text = string.Empty;
                 return;
             }
             //两个蓝牙进行匹配
-            bleCore.StartMatching(bluetoothLEDevice);
-            byte[] _Bytes1 = BitConverter.GetBytes(bluetoothLEDevice.BluetoothAddress);
-            Array.Reverse(_Bytes1);
-            string address = BitConverter.ToString(_Bytes1, 2, 6).Replace('-', ':').ToLower();
-
-            string nameWithMac = $"{bluetoothLEDevice.Name} (MAC:{address})";
+            bleCore.StartMatching(ble);
+            string nameWithMac = $"{ble.Name} (MAC:{ble.MAC})";
             txt_SelectedBL.Text = nameWithMac;
         }
 
