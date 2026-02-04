@@ -170,7 +170,7 @@ namespace BLETest1.ViewModel
         /// <summary>
         /// 当前连接蓝牙的Mac
         /// </summary>
-        private string CurrentDeviceMAC { get { return CurrentDevice.MAC; } }
+        private string CurrentDeviceMAC { get { return CurrentDevice?.MAC; } }
 
         public BleCore()
         {
@@ -432,6 +432,11 @@ namespace BLETest1.ViewModel
             {
                 this.CurrentWriteCharacteristic = gattCharacteristic;
             }
+            if (gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
+            {
+                this.CurrentWriteCharacteristic = gattCharacteristic;
+            }
+
             if (gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
             {
                 this.CurrentNotifyCharacteristic = gattCharacteristic;
@@ -440,25 +445,13 @@ namespace BLETest1.ViewModel
                 await this.EnableNotifications(CurrentNotifyCharacteristic);
             }
 
-
-            if (gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Read)
-                || gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
-            {
-                this.CurrentNameCharacteristic = gattCharacteristic;
-            }
-
-            if (gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
-            {
-                this.CurrentWriteCharacteristic = gattCharacteristic;
-            }
-
-            this.Connect();
         }
 
-        private async Task Connect()
+        public async Task Connect()
         {
             string msg = "正在连接设备<" + this.CurrentDeviceMAC + "> ..";
             this.MessageChanged(MsgType.NotifyTxt, msg);
+            this.CurrentDevice.BLE.ConnectionStatusChanged -= CurrentDevice_ConnectionStatusChanged;
             this.CurrentDevice.BLE.ConnectionStatusChanged += CurrentDevice_ConnectionStatusChanged;
             this.IsConnect = true;
         }

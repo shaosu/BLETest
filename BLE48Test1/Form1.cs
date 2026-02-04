@@ -276,17 +276,19 @@ namespace BLETest1
                 return;
             }
 
-            var item = this.GattCharacteristics.Where(u => u.Uuid == new Guid(this.cmbFeatures.SelectedItem.ToString())).FirstOrDefault();
-            //获取操作
-            this.bleCore.SetOpteron(item);
-
-            if (item.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Read) ||
-                item.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
+            //var item = this.GattCharacteristics.Where(u => u.Uuid == new Guid(this.cmbFeatures.SelectedItem.ToString())).FirstOrDefault();
+            foreach (var item in this.GattCharacteristics)
             {
-                this.btnRead.Enabled = true;
-                this.btnWriteHex.Enabled = true;
-                this.btnWriteStr.Enabled = true;
+                this.bleCore.SetOpteron(item);
+
             }
+            this.bleCore.Connect();
+
+            //获取操作
+            this.btnRead.Enabled = true;
+            this.btnWriteHex.Enabled = true;
+            this.btnWriteStr.Enabled = true;
+    
         }
 
 
