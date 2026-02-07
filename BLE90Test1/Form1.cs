@@ -26,14 +26,50 @@ namespace BLETest1
         public Form1()
         {
             InitializeComponent();
-  
-            CheckForIllegalCrossThreadCalls = false;
+
             this.bleCore.MessageChanged += BleCore_MessAgeChanged;
             this.bleCore.DevicewatcherChanged += BleCore_DeviceWatcherChanged;
             this.bleCore.GattDeviceServiceAdded += BleCore_GattDeviceServiceAdded;
             this.bleCore.CharacteristicAdded += BleCore_CharacteristicAdded;
             this.Init();
         }
+
+        public void UI_Invoke(Action action)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
+        public void UI_Invoke<T>(Action<T> action, T param)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(action, param);
+            }
+            else
+            {
+                action(param);
+            }
+        }
+        public void UI_Invoke(Action<object> action, object param)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(action, param);
+            }
+            else
+            {
+                action(param);
+            }
+        }
+
+
         private void Init()
         {
             this.Load += BlueForm_Load;
@@ -112,10 +148,17 @@ namespace BLETest1
         private void BleCore_MessAgeChanged(MsgType type, string message, byte[] data)
         {
             if (Closing) return;
-            //RunAsync(() =>
-            //{
-            this.listboxMessage.Items.Add(message);
-            //});
+            UI_Invoke(() =>
+            {
+                try
+                {
+                    this.listboxMessage.Items.Add(message);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            });
         }
 
         /// <summary>
@@ -124,9 +167,18 @@ namespace BLETest1
         private void BleCore_DeviceWatcherChanged(MsgType type, Windows.Devices.Bluetooth.BluetoothLEDevice bluetoothLEDevice)
         {
             if (Closing) return;
-
-            this.listboxBleDevice.Items.Add(bluetoothLEDevice.Name);
-            this.DeviceList.Add(bluetoothLEDevice);
+            UI_Invoke(() =>
+            {
+                try
+                {
+                    this.listboxBleDevice.Items.Add(bluetoothLEDevice.Name);
+                    this.DeviceList.Add(bluetoothLEDevice);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            });
         }
 
         /// <summary>
@@ -146,17 +198,24 @@ namespace BLETest1
         /// <param name="gattDeviceService"></param>
         private void BleCore_GattDeviceServiceAdded(GattDeviceService gattDeviceService)
         {
-            // RunAsync(() =>
-            //  {
-            this.cmbServer.Items.Add(gattDeviceService.Uuid.ToString());
-            this.GattDeviceServices.Add(gattDeviceService);
-            this.btnFeatures.Enabled = true;
-            if (cmbServer.Items.Count > 0)
+            UI_Invoke(() =>
             {
-                cmbServer.SelectedIndex = cmbServer.Items.Count - 1;
-            }
+                try
+                {
+                    this.cmbServer.Items.Add(gattDeviceService.Uuid.ToString());
+                    this.GattDeviceServices.Add(gattDeviceService);
+                    this.btnFeatures.Enabled = true;
+                    if (cmbServer.Items.Count > 0)
+                    {
+                        cmbServer.SelectedIndex = cmbServer.Items.Count - 1;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
 
-            //   });
+            });
         }
 
         /// <summary>
@@ -187,17 +246,23 @@ namespace BLETest1
         /// <param name="gattCharacteristic"></param>
         private void BleCore_CharacteristicAdded(GattCharacteristic gattCharacteristic)
         {
-            // RunAsync(() =>
-            //  {
-            this.cmbFeatures.Items.Add(gattCharacteristic.Uuid);
-            this.GattCharacteristics.Add(gattCharacteristic);
-            this.btn_OptAndConn.Enabled = true;
-            if (cmbFeatures.Items.Count > 0)
+            UI_Invoke(() =>
             {
-                cmbFeatures.SelectedIndex = cmbFeatures.Items.Count - 1;
-            }
-
-            //  });
+                try
+                {
+                    this.cmbFeatures.Items.Add(gattCharacteristic.Uuid);
+                    this.GattCharacteristics.Add(gattCharacteristic);
+                    this.btn_OptAndConn.Enabled = true;
+                    if (cmbFeatures.Items.Count > 0)
+                    {
+                        cmbFeatures.SelectedIndex = cmbFeatures.Items.Count - 1;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            });
         }
 
 

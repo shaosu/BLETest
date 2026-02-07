@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -170,7 +171,7 @@ namespace BLETest1.ViewModel
         /// <summary>
         /// 当前连接蓝牙的Mac
         /// </summary>
-        private string CurrentDeviceMAC { get { return CurrentDevice?.MAC; } }
+        private string CurrentDeviceMAC { get { return CurrentDevice.MAC; } }
 
         public BleCore()
         {
@@ -257,6 +258,10 @@ namespace BLETest1.ViewModel
 
         private void OnAdvertisementReceived(BluetoothLEAdvertisementWatcher watcher, BluetoothLEAdvertisementReceivedEventArgs eventArgs)
         {
+            if (eventArgs.RawSignalStrengthInDBm <= -100) return;
+
+
+
             BluetoothLEDevice.FromBluetoothAddressAsync(eventArgs.BluetoothAddress).Completed = async (asyncInfo, asyncStatus) =>
             {
                 if (asyncStatus == AsyncStatus.Completed)
@@ -267,50 +272,61 @@ namespace BLETest1.ViewModel
                     }
                     else
                     {
-                        BluetoothLEDevice currentDevice = asyncInfo.GetResults();
-                        if (currentDevice.Name.StartsWith("Bluetooth"))
+                        try
                         {
-                            return;
-                        }
 
-                        Boolean contain = false;
-                        MyBluetoothLEDeviceEx curEx = null;
-                        foreach (MyBluetoothLEDeviceEx device in DevicesList)//过滤重复的设备
-                        {
-                            if (device.BLE.DeviceId == currentDevice.DeviceId)
+                            BluetoothLEDevice currentDevice = asyncInfo.GetResults();
+                            if (currentDevice.Name.StartsWith("Bluetooth"))
                             {
-                                contain = true;
-                                curEx = device;
+                                return;
                             }
-                        }
-                        if (contain == false)
-                        {
-                            byte[] _Bytes1 = BitConverter.GetBytes(currentDevice.BluetoothAddress);
-                            Array.Reverse(_Bytes1);
-                            string mac = BitConverter.ToString(_Bytes1, 2, 6).Replace('-', ':').ToLower();
-                            var rssi = eventArgs.RawSignalStrengthInDBm;
-                            string blName = currentDevice.Name;
-                            MyBluetoothLEDeviceEx bleEx = new MyBluetoothLEDeviceEx();
-                            bleEx.BLE = currentDevice;
-                            bleEx.MAC = mac;
-                            bleEx.RSSI = rssi;
-                            bleEx.Name = blName;
 
-                            this.DevicesList.Add(bleEx);
-                            this.MessageChanged(MsgType.NotifyTxt, "发现设备：" + currentDevice.Name + "  address:" + mac + " rssi:" + rssi);
-                            this.DevicewatcherChanged(MsgType.BleDevice, bleEx);
-                        }
-                        else
-                        {
-                            if (curEx != null)
+                            Boolean contain = false;
+                            MyBluetoothLEDeviceEx curEx = null;
+
+                            int c = DevicesList.Count;
+                            for (int i = 0; i < c; i++) //过滤重复的设备
                             {
-                                if (curEx.RSSI != eventArgs.RawSignalStrengthInDBm)
+                                MyBluetoothLEDeviceEx device = DevicesList[i];
+                                if (device.BLE.DeviceId == currentDevice.DeviceId)
                                 {
-                                    curEx.RSSI = eventArgs.RawSignalStrengthInDBm;
-                                    DeviceRSSIChangedChanged?.Invoke(curEx, curEx.RSSI);
+                                    contain = true;
+                                    curEx = device;
                                 }
-
                             }
+
+                            if (contain == false)
+                            {
+                                byte[] _Bytes1 = BitConverter.GetBytes(currentDevice.BluetoothAddress);
+                                Array.Reverse(_Bytes1);
+                                string mac = BitConverter.ToString(_Bytes1, 2, 6).Replace('-', ':').ToLower();
+                                var rssi = eventArgs.RawSignalStrengthInDBm;
+                                string blName = currentDevice.Name;
+                                MyBluetoothLEDeviceEx bleEx = new MyBluetoothLEDeviceEx();
+                                bleEx.BLE = currentDevice;
+                                bleEx.MAC = mac;
+                                bleEx.RSSI = rssi;
+                                bleEx.Name = blName;
+
+                                this.DevicesList.Add(bleEx);
+                                this.MessageChanged(MsgType.NotifyTxt, "发现设备：" + currentDevice.Name + "  address:" + mac + " rssi:" + rssi);
+                                this.DevicewatcherChanged(MsgType.BleDevice, bleEx);
+                            }
+                            else
+                            {
+                                if (curEx != null)
+                                {
+                                    if (curEx.RSSI != eventArgs.RawSignalStrengthInDBm)
+                                    {
+                                        curEx.RSSI = eventArgs.RawSignalStrengthInDBm;
+                                        //DeviceRSSIChangedChanged?.Invoke(curEx, curEx.RSSI);
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
                         }
                     }
 
@@ -432,11 +448,6 @@ namespace BLETest1.ViewModel
             {
                 this.CurrentWriteCharacteristic = gattCharacteristic;
             }
-            if (gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
-            {
-                this.CurrentWriteCharacteristic = gattCharacteristic;
-            }
-
             if (gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
             {
                 this.CurrentNotifyCharacteristic = gattCharacteristic;
@@ -445,16 +456,72 @@ namespace BLETest1.ViewModel
                 await this.EnableNotifications(CurrentNotifyCharacteristic);
             }
 
+
+            if (gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Read)
+                || gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
+            {
+                this.CurrentNameCharacteristic = gattCharacteristic;
+            }
+
+            if (gattCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
+            {
+                this.CurrentWriteCharacteristic = gattCharacteristic;
+            }
+
+            this.Connect();
         }
 
-        public async Task Connect()
+        public async Task SetOpteron(GattCharacteristic write, GattCharacteristic notify)
+        {
+
+            if (write.CharacteristicProperties.HasFlag(GattCharacteristicProperties.WriteWithoutResponse)
+                || write.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
+            {
+                this.CurrentWriteCharacteristic = write;
+            }
+
+            if (notify.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+            {
+                this.CurrentNotifyCharacteristic = notify;
+                try
+                {
+                    // 设置特征值的ValueChanged事件处理器
+                    CurrentNotifyCharacteristic.ValueChanged += Characteristic_ValueChanged;
+
+                    // 将特征的客户端特征配置设置为通知模式
+                    var status = await CurrentNotifyCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+
+                    if (status != GattCommunicationStatus.Success)
+                    {
+                        throw new Exception($"启用通知失败: {status}");
+                    }
+
+                    string msg = "通知已启用<" + this.CurrentDeviceMAC;
+                    this.MessageChanged(MsgType.NotifyTxt, msg);
+                }
+                catch (Exception ex)
+                {
+                    CurrentNotifyCharacteristic.ValueChanged -= Characteristic_ValueChanged;
+                    throw new Exception($"启用通知时出错: {ex.Message}", ex);
+                }
+
+                // this.CurrentNotifyCharacteristic.ProtectionLevel = GattProtectionLevel.Plain;
+                // this.CurrentNotifyCharacteristic.ValueChanged += Characteristic_ValueChanged;
+                //await this.EnableNotifications(CurrentNotifyCharacteristic);
+            }
+            this.Connect();
+        }
+
+
+
+        private async Task Connect()
         {
             string msg = "正在连接设备<" + this.CurrentDeviceMAC + "> ..";
             this.MessageChanged(MsgType.NotifyTxt, msg);
-            this.CurrentDevice.BLE.ConnectionStatusChanged -= CurrentDevice_ConnectionStatusChanged;
             this.CurrentDevice.BLE.ConnectionStatusChanged += CurrentDevice_ConnectionStatusChanged;
             this.IsConnect = true;
         }
+
         public bool IsConnect = false;
         /// <summary>
         /// 主动断开连接
@@ -493,12 +560,13 @@ namespace BLETest1.ViewModel
                 if (!asyncLock)
                 {
                     asyncLock = true;
+                    string mac = CurrentDeviceMAC;
                     this.CurrentDevice.BLE.Dispose();
                     this.CurrentDevice = null;
 
                     this.CurrentNotifyCharacteristic = null;
                     this.CurrentWriteCharacteristic = null;
-                    SelectDeviceFromIdAsync(CurrentDeviceMAC);
+                    SelectDeviceFromIdAsync(mac);
                 }
             }
             else
