@@ -119,5 +119,11 @@ namespace BLETest1
             return data;
         }
         #endregion
+
+        private void listboxMessage_DoubleClick(object sender, EventArgs e)
+        {
+            string msg = listboxMessage.SelectedItem.ToString();
+            Clipboard.SetText(msg);
+        }
     }
 }

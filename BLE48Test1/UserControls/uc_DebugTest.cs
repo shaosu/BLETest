@@ -35,11 +35,6 @@ namespace BLETest1.UserControls
         public uc_DebugTest()
         {
             InitializeComponent();
-            this.bleCore.MessageChanged += BleCore_MessAgeChanged;
-            this.bleCore.DevicewatcherChanged += BleCore_DeviceWatcherChanged;
-            this.bleCore.GattDeviceServiceAdded += BleCore_GattDeviceServiceAdded;
-            this.bleCore.CharacteristicAdded += BleCore_CharacteristicAdded;
-            this.bleCore.DeviceRSSIChangedChanged += BleCore_DeviceRSSIChangedChanged;
         }
 
         private void btn_WriteStr_Click(object sender, EventArgs e)
@@ -69,6 +64,23 @@ namespace BLETest1.UserControls
             {
                 if (this.btnSearch.Text == Search)
                 {
+                    bleCore = new BleCore();
+
+                    this.bleCore.MessageChanged -= BleCore_MessAgeChanged;
+                    this.bleCore.DevicewatcherChanged -= BleCore_DeviceWatcherChanged;
+                    this.bleCore.GattDeviceServiceAdded -= BleCore_GattDeviceServiceAdded;
+                    this.bleCore.CharacteristicAdded -= BleCore_CharacteristicAdded;
+                    this.bleCore.DeviceRSSIChangedChanged -= BleCore_DeviceRSSIChangedChanged;
+
+                    this.bleCore.MessageChanged += BleCore_MessAgeChanged;
+                    this.bleCore.DevicewatcherChanged += BleCore_DeviceWatcherChanged;
+                    this.bleCore.GattDeviceServiceAdded += BleCore_GattDeviceServiceAdded;
+                    this.bleCore.CharacteristicAdded += BleCore_CharacteristicAdded;
+                    this.bleCore.DeviceRSSIChangedChanged += BleCore_DeviceRSSIChangedChanged;
+
+                    DeviceList.Clear();
+                    GattDeviceServices.Clear();
+                    GattCharacteristics.Clear();
                     this.listboxMessage.Items.Clear();
                     this.listboxBleDevice.Items.Clear();
                     this.bleCore.StartBleDevicewatcher();
@@ -333,30 +345,12 @@ namespace BLETest1.UserControls
                     return;
                 }
 
-                var write = cmb_WriteFeatures.SelectedItem as GattCharacteristic;
-                var notify = cmb_NotifyFeatures.SelectedItem as GattCharacteristic;
-                /*
-                for (int i = 0; i < GattCharacteristics.Count; i++)
-                {
-                    var tmp = GattCharacteristics[i];
-                    if (tmp.CharacteristicProperties.HasFlag(GattCharacteristicProperties.WriteWithoutResponse)
-                        || tmp.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
-                    {
-                        if (write == null)
-                        {
-                            write = tmp;
-                        }
-                        if (tmp.CharacteristicProperties.HasFlag(GattCharacteristicProperties.WriteWithoutResponse))
-                        {
-                            write = tmp; // 优先使用WriteWithoutResponse
-                        }
-                    }
-                    if (tmp.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
-                    {
-                        notify = tmp;
-                    }
-                }
-                */
+                var write_Uuid = cmb_WriteFeatures.SelectedItem.ToString();
+                var notify_Uuid = cmb_NotifyFeatures.SelectedItem.ToString();
+
+                GattCharacteristic write = GattCharacteristics.Where(a => a.Uuid.ToString() == write_Uuid).FirstOrDefault();
+                GattCharacteristic notify = GattCharacteristics.Where(a => a.Uuid.ToString() == notify_Uuid).FirstOrDefault();
+
                 //获取操作
                 this.bleCore.SetOpteron(write, notify);
                 this.btn_WriteHex.Enabled = true;

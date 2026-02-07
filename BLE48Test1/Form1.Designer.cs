@@ -31,20 +31,20 @@
             this.listboxMessage = new System.Windows.Forms.ListBox();
             this.sp1 = new System.Windows.Forms.SplitContainer();
             this.tab_Root = new System.Windows.Forms.TabControl();
-            this.tabPage_Debug = new System.Windows.Forms.TabPage();
             this.tabPage_LoopRead = new System.Windows.Forms.TabPage();
-            this.tabPage_SleepWakeup = new System.Windows.Forms.TabPage();
-            this.uc_DebugTest1 = new BLETest1.UserControls.uc_DebugTest();
             this.uc_ConnDisConnTest1 = new BLETest1.UserControls.uc_ConnDisConnTest();
+            this.tabPage_SleepWakeup = new System.Windows.Forms.TabPage();
             this.uc_SleepLoopTest1 = new BLETest1.UserControls.uc_SleepLoopTest();
+            this.tabPage_Debug = new System.Windows.Forms.TabPage();
+            this.uc_DebugTest1 = new BLETest1.UserControls.uc_DebugTest();
             ((System.ComponentModel.ISupportInitialize)(this.sp1)).BeginInit();
             this.sp1.Panel1.SuspendLayout();
             this.sp1.Panel2.SuspendLayout();
             this.sp1.SuspendLayout();
             this.tab_Root.SuspendLayout();
-            this.tabPage_Debug.SuspendLayout();
             this.tabPage_LoopRead.SuspendLayout();
             this.tabPage_SleepWakeup.SuspendLayout();
+            this.tabPage_Debug.SuspendLayout();
             this.SuspendLayout();
             // 
             // listboxMessage
@@ -57,6 +57,7 @@
             this.listboxMessage.Name = "listboxMessage";
             this.listboxMessage.Size = new System.Drawing.Size(689, 771);
             this.listboxMessage.TabIndex = 15;
+            this.listboxMessage.DoubleClick += new System.EventHandler(this.listboxMessage_DoubleClick);
             // 
             // sp1
             // 
@@ -91,17 +92,6 @@
             this.tab_Root.Size = new System.Drawing.Size(589, 771);
             this.tab_Root.TabIndex = 28;
             // 
-            // tabPage_Debug
-            // 
-            this.tabPage_Debug.Controls.Add(this.uc_DebugTest1);
-            this.tabPage_Debug.Location = new System.Drawing.Point(4, 34);
-            this.tabPage_Debug.Name = "tabPage_Debug";
-            this.tabPage_Debug.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_Debug.Size = new System.Drawing.Size(581, 733);
-            this.tabPage_Debug.TabIndex = 0;
-            this.tabPage_Debug.Text = "调试";
-            this.tabPage_Debug.UseVisualStyleBackColor = true;
-            // 
             // tabPage_LoopRead
             // 
             this.tabPage_LoopRead.Controls.Add(this.uc_ConnDisConnTest1);
@@ -113,25 +103,6 @@
             this.tabPage_LoopRead.Text = "循环读测试";
             this.tabPage_LoopRead.UseVisualStyleBackColor = true;
             // 
-            // tabPage_SleepWakeup
-            // 
-            this.tabPage_SleepWakeup.Controls.Add(this.uc_SleepLoopTest1);
-            this.tabPage_SleepWakeup.Location = new System.Drawing.Point(4, 34);
-            this.tabPage_SleepWakeup.Name = "tabPage_SleepWakeup";
-            this.tabPage_SleepWakeup.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_SleepWakeup.Size = new System.Drawing.Size(581, 733);
-            this.tabPage_SleepWakeup.TabIndex = 2;
-            this.tabPage_SleepWakeup.Text = "循环休眠唤醒测试";
-            this.tabPage_SleepWakeup.UseVisualStyleBackColor = true;
-            // 
-            // uc_DebugTest1
-            // 
-            this.uc_DebugTest1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uc_DebugTest1.Location = new System.Drawing.Point(3, 3);
-            this.uc_DebugTest1.Name = "uc_DebugTest1";
-            this.uc_DebugTest1.Size = new System.Drawing.Size(575, 727);
-            this.uc_DebugTest1.TabIndex = 0;
-            // 
             // uc_ConnDisConnTest1
             // 
             this.uc_ConnDisConnTest1.AutoSize = true;
@@ -141,13 +112,43 @@
             this.uc_ConnDisConnTest1.Size = new System.Drawing.Size(575, 727);
             this.uc_ConnDisConnTest1.TabIndex = 0;
             // 
+            // tabPage_SleepWakeup
+            // 
+            this.tabPage_SleepWakeup.Controls.Add(this.uc_SleepLoopTest1);
+            this.tabPage_SleepWakeup.Location = new System.Drawing.Point(4, 25);
+            this.tabPage_SleepWakeup.Name = "tabPage_SleepWakeup";
+            this.tabPage_SleepWakeup.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_SleepWakeup.Size = new System.Drawing.Size(192, 71);
+            this.tabPage_SleepWakeup.TabIndex = 2;
+            this.tabPage_SleepWakeup.Text = "循环休眠唤醒测试";
+            this.tabPage_SleepWakeup.UseVisualStyleBackColor = true;
+            // 
             // uc_SleepLoopTest1
             // 
             this.uc_SleepLoopTest1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.uc_SleepLoopTest1.Location = new System.Drawing.Point(3, 3);
             this.uc_SleepLoopTest1.Name = "uc_SleepLoopTest1";
-            this.uc_SleepLoopTest1.Size = new System.Drawing.Size(575, 727);
+            this.uc_SleepLoopTest1.Size = new System.Drawing.Size(186, 65);
             this.uc_SleepLoopTest1.TabIndex = 0;
+            // 
+            // tabPage_Debug
+            // 
+            this.tabPage_Debug.Controls.Add(this.uc_DebugTest1);
+            this.tabPage_Debug.Location = new System.Drawing.Point(4, 25);
+            this.tabPage_Debug.Name = "tabPage_Debug";
+            this.tabPage_Debug.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_Debug.Size = new System.Drawing.Size(192, 71);
+            this.tabPage_Debug.TabIndex = 0;
+            this.tabPage_Debug.Text = "调试";
+            this.tabPage_Debug.UseVisualStyleBackColor = true;
+            // 
+            // uc_DebugTest1
+            // 
+            this.uc_DebugTest1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uc_DebugTest1.Location = new System.Drawing.Point(3, 3);
+            this.uc_DebugTest1.Name = "uc_DebugTest1";
+            this.uc_DebugTest1.Size = new System.Drawing.Size(186, 65);
+            this.uc_DebugTest1.TabIndex = 0;
             // 
             // Form1
             // 
@@ -162,10 +163,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.sp1)).EndInit();
             this.sp1.ResumeLayout(false);
             this.tab_Root.ResumeLayout(false);
-            this.tabPage_Debug.ResumeLayout(false);
             this.tabPage_LoopRead.ResumeLayout(false);
             this.tabPage_LoopRead.PerformLayout();
             this.tabPage_SleepWakeup.ResumeLayout(false);
+            this.tabPage_Debug.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

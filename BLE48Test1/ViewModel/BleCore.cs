@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLETest1.Devices;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -699,7 +700,7 @@ namespace BLETest1.ViewModel
                 }
             };
         }
-
+   
         /// <summary>
         /// 接受到蓝牙数据
         /// </summary>
@@ -709,7 +710,14 @@ namespace BLETest1.ViewModel
             CryptographicBuffer.CopyToByteArray(args.CharacteristicValue, out data);
             string str = ASCIIEncoding.UTF8.GetString(data).Replace("\0", string.Empty);
             string hex = string.Join(" ", data.Select(a => a.ToString("X2")).ToArray());
-            string format = $"通知:{str}  =>Hex:{hex}";
+            string format = $"通知:{str}  =>Hex:{hex} ";
+            // 解析
+            if (sender.Uuid.ToString().ToLower() == MiTemperatureSensor.ChartUUID.ToLower())
+            {
+                var tmp = MiTemperatureSensor.ParseTemperatureData(data);
+                format += tmp.ToString();
+            }
+           
             this.MessageChanged(MsgType.BleRecData, format, data);
         }
 

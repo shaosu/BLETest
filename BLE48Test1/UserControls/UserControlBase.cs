@@ -12,10 +12,9 @@ namespace BLETest1.UserControls
         // 用于占位，防止UserControlBase显示为控件
     }
 
-    public abstract class UserControlBase : UserControl
+    public class UserControlBase : UserControl
     {
         internal System.Windows.Forms.ListBox listboxMessage;
-
         public void UI_Invoke(Action action)
         {
             if (this.InvokeRequired)
@@ -50,8 +49,10 @@ namespace BLETest1.UserControls
                 action(param);
             }
         }
+        internal virtual void AppendToLogFile(string timeMsg)
+        {
 
-        internal abstract void AppendToLogFile(string timeMsg);
+        }
 
         public void AppendMessageWithTime(string msg)
         {

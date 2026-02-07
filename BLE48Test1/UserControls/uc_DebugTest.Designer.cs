@@ -190,6 +190,7 @@
             // cmb_NotifyFeatures
             // 
             this.tablePanel_BL.SetColumnSpan(this.cmb_NotifyFeatures, 2);
+            this.cmb_NotifyFeatures.DisplayMember = "Uuid";
             this.cmb_NotifyFeatures.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cmb_NotifyFeatures.FormattingEnabled = true;
             this.cmb_NotifyFeatures.Location = new System.Drawing.Point(170, 138);
@@ -216,6 +217,7 @@
             this.cmb_WriteFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.tablePanel_BL.SetColumnSpan(this.cmb_WriteFeatures, 2);
+            this.cmb_WriteFeatures.DisplayMember = "Uuid";
             this.cmb_WriteFeatures.FormattingEnabled = true;
             this.cmb_WriteFeatures.Location = new System.Drawing.Point(170, 75);
             this.cmb_WriteFeatures.Margin = new System.Windows.Forms.Padding(4);
