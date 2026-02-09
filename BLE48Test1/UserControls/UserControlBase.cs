@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLETest1.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace BLETest1.UserControls
     public class UserControlBase : UserControl
     {
         internal System.Windows.Forms.ListBox listboxMessage;
+        internal StartParam StartParam;
+
         public void UI_Invoke(Action action)
         {
             if (this.InvokeRequired)

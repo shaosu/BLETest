@@ -56,7 +56,85 @@ namespace BLETest1.UserControls
             com_SleepCurrentSrc.SelectedIndex = 0;
             com_VirPadPort_Click(sender, e);
             if (com_VirPadPort.Items.Count > 0) com_VirPadPort.SelectedIndex = 0;
+
+            UseStartParam();
         }
+
+        private void UseStartParam()
+        {
+            if (StartParam == null) return;
+    
+            com_BLList.SelectedIndex = StartParam.BLSelectIndex;
+            txt_MAC.Text = StartParam.MAC;
+            txt_tagService.Text = StartParam.ServiceUUID;
+            txt_tagWriteChar.Text = StartParam.WriteChartUUID;
+            txt_tagNotifyChar.Text = StartParam.NotifyChartUUID;
+            txt_filterName.Text = StartParam.FilterName;
+            num_minDb.Value = StartParam.MinDB;
+
+            SendCount = StartParam.SendCount;
+            RecvCount = StartParam.RecvCount;
+            StartTime = StartParam.StartTime;
+
+            SleepCount = StartParam.SleepP.SleepCount;
+            SleepFaultCount = StartParam.SleepP.SleepFaultCount;
+            WakeUpCount = StartParam.SleepP.WakeUpCount;
+            WakeUpFaultCount = StartParam.SleepP.WakeUpFaultCount;
+            SleepUpLoopCount = StartParam.SleepP.SleepUpLoopCount;
+
+            com_VirPadPort.SelectedItem = StartParam.SleepP.VirPadCOM;
+            num_SleepUpLoopDelay.Value = StartParam.SleepP.SleepUpLoopDelaySec;
+            num_MaxSleepCurrent.Value = (Decimal)StartParam.SleepP.MaxSleepCurrent_mA;
+            com_SleepCurrentSrc.SelectedIndex = StartParam.SleepP.SleepCurrentSrc;
+            nmu_DelayForGetCurrent.Value = StartParam.SleepP.DelayForGetCurrent;
+
+            if (StartTime != DateTime.MinValue)
+            {
+                chk_DLLDebugLoop.Checked = true;
+            }
+
+        }
+        private void BulidParamAndRestart()
+        {
+            if (this.InvokeRequired)
+            {
+                Action action = BulidParamAndRestart;
+                this.Invoke(action);
+                return;
+            }
+            StartParam param = new StartParam()
+            {
+                RunType = RunType.LoopSleep,
+                MAC = txt_MAC.Text,
+                StartTime = StartTime,
+                SendCount = SendCount,
+                RecvCount = RecvCount,
+            };
+            param.ServiceUUID = txt_tagService.Text;
+            param.WriteChartUUID = txt_tagWriteChar.Text;
+            param.NotifyChartUUID = txt_tagNotifyChar.Text;
+            param.BLSelectIndex = com_BLList.SelectedIndex;
+            param.FilterName = txt_filterName.Text;
+            param.MinDB = (short)num_minDb.Value;
+
+            param.SleepP = new SleepParam()
+            {
+                SleepCount = SleepCount,
+                SleepFaultCount = SleepFaultCount,
+                WakeUpCount = WakeUpCount,
+                WakeUpFaultCount = WakeUpFaultCount,
+                SleepUpLoopCount = SleepUpLoopCount,
+                VirPadCOM = com_VirPadPort.SelectedItem.ToString(),
+                SleepUpLoopDelaySec = (int)num_SleepUpLoopDelay.Value,
+                MaxSleepCurrent_mA = (double)num_MaxSleepCurrent.Value,
+                SleepCurrentSrc = com_SleepCurrentSrc.SelectedIndex,
+                DelayForGetCurrent = (int)nmu_DelayForGetCurrent.Value,
+            };
+
+            StartParam.AppExitAndRestart(param);
+        }
+
+
         internal override void AppendToLogFile(string timeMsg)
         {
             string file = $"Log\\循环休眠测试{DateTime.Now.ToString("yyyMMdd")}.txt";
@@ -70,6 +148,7 @@ namespace BLETest1.UserControls
         private void btnClearLog_Click(object sender, EventArgs e)
         {
             listboxMessage.Items.Clear();
+            BulidParamAndRestart();
         }
 
         private async Task DisConnAndClear(BleCore2 ble, ConnectedDeviceParam connParam)
@@ -522,11 +601,12 @@ namespace BLETest1.UserControls
 
             dllTimer.Enabled = chk_DLLDebugLoop.Checked;// 停止时钟
             CheckLoop = chk_DLLDebugLoop.Checked;
-            if (dllTimer.Enabled == true)
+            if (dllTimer.Enabled == true && StartParam == null)
             {
                 StartTime = DateTime.Now;
                 AppendMessageWithTime("开始时间:" + StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
             }
+            StartParam = null;
             DllTimer_Tick(sender, e);
         }
 
@@ -585,7 +665,7 @@ namespace BLETest1.UserControls
                 sb.AppendLine($"休眠次数:{SleepCount} 休眠失败次数:{SleepFaultCount}");
                 sb.AppendLine($"唤醒次数:{WakeUpCount} 唤醒次数次数:{WakeUpFaultCount}");
                 sb.AppendLine($"循环次数:{SleepUpLoopCount}");
-                sb.AppendLine($"开始时间:{StartTime.ToString("yyyy-MM-dd HH:mm:ss")}时长: {sp.TotalHours:F4}H");
+                sb.AppendLine($"开始时间:{StartTime.ToString("yyyy-MM-dd HH:mm:ss")} 时长:{sp.TotalHours:F4}H");
                 txt_TJ.Text = sb.ToString();
             }
         }

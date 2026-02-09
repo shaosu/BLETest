@@ -86,6 +86,7 @@
     <Compile Include="ViewModel\BleCore2.cs" />
     <Compile Include="ViewModel\IBLConnTagParam.cs" />
     <Compile Include="ViewModel\MyBluetoothLEDeviceEx.cs" />
+    <Compile Include="ViewModel\StartParam.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -124,6 +125,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
       <Version>10.0.22000.196</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.4</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

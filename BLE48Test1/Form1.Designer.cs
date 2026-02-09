@@ -52,6 +52,8 @@
             this.listboxMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listboxMessage.FormattingEnabled = true;
             this.listboxMessage.ItemHeight = 15;
+            this.listboxMessage.Items.AddRange(new object[] {
+            "右键扫描结果可复制MAC"});
             this.listboxMessage.Location = new System.Drawing.Point(0, 0);
             this.listboxMessage.Margin = new System.Windows.Forms.Padding(4);
             this.listboxMessage.Name = "listboxMessage";
@@ -115,10 +117,10 @@
             // tabPage_SleepWakeup
             // 
             this.tabPage_SleepWakeup.Controls.Add(this.uc_SleepLoopTest1);
-            this.tabPage_SleepWakeup.Location = new System.Drawing.Point(4, 25);
+            this.tabPage_SleepWakeup.Location = new System.Drawing.Point(4, 34);
             this.tabPage_SleepWakeup.Name = "tabPage_SleepWakeup";
             this.tabPage_SleepWakeup.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_SleepWakeup.Size = new System.Drawing.Size(192, 71);
+            this.tabPage_SleepWakeup.Size = new System.Drawing.Size(581, 733);
             this.tabPage_SleepWakeup.TabIndex = 2;
             this.tabPage_SleepWakeup.Text = "循环休眠唤醒测试";
             this.tabPage_SleepWakeup.UseVisualStyleBackColor = true;
@@ -128,16 +130,16 @@
             this.uc_SleepLoopTest1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.uc_SleepLoopTest1.Location = new System.Drawing.Point(3, 3);
             this.uc_SleepLoopTest1.Name = "uc_SleepLoopTest1";
-            this.uc_SleepLoopTest1.Size = new System.Drawing.Size(186, 65);
+            this.uc_SleepLoopTest1.Size = new System.Drawing.Size(575, 727);
             this.uc_SleepLoopTest1.TabIndex = 0;
             // 
             // tabPage_Debug
             // 
             this.tabPage_Debug.Controls.Add(this.uc_DebugTest1);
-            this.tabPage_Debug.Location = new System.Drawing.Point(4, 25);
+            this.tabPage_Debug.Location = new System.Drawing.Point(4, 34);
             this.tabPage_Debug.Name = "tabPage_Debug";
             this.tabPage_Debug.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_Debug.Size = new System.Drawing.Size(192, 71);
+            this.tabPage_Debug.Size = new System.Drawing.Size(581, 733);
             this.tabPage_Debug.TabIndex = 0;
             this.tabPage_Debug.Text = "调试";
             this.tabPage_Debug.UseVisualStyleBackColor = true;
@@ -147,7 +149,7 @@
             this.uc_DebugTest1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.uc_DebugTest1.Location = new System.Drawing.Point(3, 3);
             this.uc_DebugTest1.Name = "uc_DebugTest1";
-            this.uc_DebugTest1.Size = new System.Drawing.Size(186, 65);
+            this.uc_DebugTest1.Size = new System.Drawing.Size(575, 727);
             this.uc_DebugTest1.TabIndex = 0;
             // 
             // Form1
@@ -155,6 +157,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1283, 771);
             this.Controls.Add(this.sp1);
+            this.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "ESP32-PICO-D4 BLE蓝牙测试V1.0.0";

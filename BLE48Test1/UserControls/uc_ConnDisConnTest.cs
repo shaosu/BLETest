@@ -40,6 +40,31 @@ namespace BLETest1.UserControls
         {
             com_BLList.SelectedIndex = 0;
             com_LoopMode.SelectedIndex = 0;
+            UseStartParam();
+        }
+
+
+        private void UseStartParam()
+        {
+            if (StartParam == null) return;
+            com_LoopMode.SelectedIndex = (int)StartParam.RunType;
+            com_BLList.SelectedIndex = StartParam.BLSelectIndex;
+            txt_MAC.Text = StartParam.MAC;
+            txt_tagService.Text = StartParam.ServiceUUID;
+            txt_tagWriteChar.Text = StartParam.WriteChartUUID;
+            txt_tagNotifyChar.Text = StartParam.NotifyChartUUID;
+            txt_filterName.Text = StartParam.FilterName;
+            num_minDb.Value = StartParam.MinDB;
+            num_ReadCount.Value = StartParam.LoopReadP.ReadCount;
+            num_ReadDelay.Value = StartParam.LoopReadP.ReadIntervalMs;
+
+            SendCount = StartParam.SendCount;
+            RecvCount = StartParam.RecvCount;
+            StartTime = StartParam.StartTime;
+            if (StartTime != DateTime.MinValue)
+            {
+                chk_DLLDebugLoop.Checked = true;
+            }
         }
 
         internal override void AppendToLogFile(string timeMsg)
@@ -52,9 +77,38 @@ namespace BLETest1.UserControls
             File.AppendAllText(file, timeMsg + Environment.NewLine);
         }
 
+        private void BulidParamAndRestart()
+        {
+            if (this.InvokeRequired)
+            {
+                Action action = BulidParamAndRestart;
+                this.Invoke(action);
+                return;
+            }
+            StartParam param = new StartParam()
+            {
+                RunType = RunType.LoopRead,
+                MAC = txt_MAC.Text,
+                StartTime = StartTime,
+                SendCount = SendCount,
+                RecvCount = RecvCount,
+            };
+            param.ServiceUUID = txt_tagService.Text;
+            param.WriteChartUUID = txt_tagWriteChar.Text;
+            param.NotifyChartUUID = txt_tagNotifyChar.Text;
+            param.BLSelectIndex = com_BLList.SelectedIndex;
+            param.FilterName = txt_filterName.Text;
+            param.MinDB = (short)num_minDb.Value;
+            param.LoopReadP = new LoopReadParam();
+            param.LoopReadP.LoopType = com_BLList.SelectedIndex;
+            param.LoopReadP.ReadCount = (ushort)num_ReadCount.Value;
+            param.LoopReadP.ReadIntervalMs = (int)num_ReadDelay.Value;
+            StartParam.AppExitAndRestart(param);
+        }
         private void btnClearLog_Click(object sender, EventArgs e)
         {
             listboxMessage.Items.Clear();
+            BulidParamAndRestart();
         }
 
         private async Task DisConnAndClear(BleCore2 ble, ConnectedDeviceParam connParam)
@@ -286,11 +340,12 @@ namespace BLETest1.UserControls
 
             dllTimer.Enabled = chk_DLLDebugLoop.Checked;// 停止时钟
             CheckLoop = chk_DLLDebugLoop.Checked;
-            if (dllTimer.Enabled == true)
+            if (dllTimer.Enabled == true & StartParam == null)
             {
                 StartTime = DateTime.Now;
                 AppendMessageWithTime("开始时间:" + StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
             }
+            StartParam = null;
             DllTimer_Tick(sender, e);
         }
 

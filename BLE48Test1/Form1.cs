@@ -1,7 +1,10 @@
-﻿using System;
+﻿using BLETest1.UserControls;
+using BLETest1.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace BLETest1
@@ -9,12 +12,21 @@ namespace BLETest1
     public partial class Form1 : Form
     {
         private bool Closing = false;
+        private ContextMenuStrip contextMenuStrip1;
+
         public Form1()
         {
             InitializeComponent();
             this.Init();
         }
-
+        public Form1(StartParam param)
+        {
+            InitializeComponent();
+            this.Init();
+            StartParam = param;
+            Init(StartParam);
+        }
+        public StartParam StartParam;
         private void Init()
         {
             this.Load += BlueForm_Load;
@@ -23,10 +35,90 @@ namespace BLETest1
             uc_ConnDisConnTest1.listboxMessage = this.listboxMessage;
             uc_SleepLoopTest1.listboxMessage = this.listboxMessage;
         }
+        private void Init(StartParam param)
+        {
+            if (param == null) return;
+
+            switch (param.RunType)
+            {
+                case RunType.LoopRead:
+                    uc_ConnDisConnTest1.StartParam = param;
+                    break;
+                case RunType.LoopSleep:
+                    tab_Root.SelectedIndex = 1;
+                    uc_SleepLoopTest1.StartParam = param;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         private void BlueForm_Load(object sender, EventArgs e)
         {
+            contextMenuStrip1 = new ContextMenuStrip();
+            // 复制项目
+            ToolStripMenuItem copyItem = new ToolStripMenuItem("复制", null, CopyMenuItem_Click);
+            copyItem.ShortcutKeys = Keys.Control | Keys.C;
 
+            ToolStripMenuItem copyMACItem = new ToolStripMenuItem("复制MAC", null, CopyMACMenuItem_Click);
+            copyMACItem.ShortcutKeys = Keys.Control | Keys.X;
+
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[]
+            {
+                copyItem,
+                copyMACItem,
+            });
+
+            listboxMessage.SelectionMode = System.Windows.Forms.SelectionMode.One;
+            listboxMessage.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        private void ListBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                int index = listboxMessage.IndexFromPoint(e.Location);
+
+                if (index >= 0 && index < listboxMessage.Items.Count)
+                {
+                    // 如果右键点击的项目未被选中，则选中它
+                    if (!listboxMessage.SelectedIndices.Contains(index))
+                    {
+                        listboxMessage.SelectedIndex = index;
+                    }
+                }
+            }
+        }
+
+        private void CopyMACMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listboxMessage.SelectedItems.Count > 0)
+            {
+                string text = listboxMessage.SelectedItem.ToString();
+                if (string.IsNullOrWhiteSpace(text) == false)
+                {
+                    text = text.ToUpper();
+                    string pattern = @"MAC:([0-9A-F]{2}:){5}[0-9A-F]{2}";
+                    Regex regex = new Regex(pattern);
+                    Match match1 = regex.Match(text);
+                    if (match1.Success)
+                    {
+                        Console.WriteLine($"匹配到的 MAC: {match1.Value}");
+                        int index = match1.Value.IndexOf("MAC:");
+                        string mac = match1.Value.Substring(index + 4).Trim();
+                        Clipboard.SetText(mac);
+                    }
+                }
+            }
+        }
+
+        private void CopyMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listboxMessage.SelectedItems.Count > 0)
+            {
+                string text = listboxMessage.SelectedItem.ToString();
+                Clipboard.SetText(text);
+            }
         }
 
         private void BlueForm_FormClosing(object sender, FormClosingEventArgs e)
