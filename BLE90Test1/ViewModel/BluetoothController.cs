@@ -42,7 +42,6 @@ namespace BLETest1.ViewModel
             var bluetoothRadio = await GetBluetoothRadioAsync();
             if (bluetoothRadio == null)
             {
-                //System.Windows.Forms.MessageBox.Show("设备不支持蓝牙功能。", "错误", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 return false; // 设备不支持蓝牙
             }
 
@@ -57,6 +56,16 @@ namespace BLETest1.ViewModel
             return result == RadioAccessStatus.Allowed;
         }
 
+        public async Task RestartBLUseRadio(int delaySec = 3)
+        {
+            if (delaySec < 3)
+            {
+                delaySec = 3;
+            }
+            await SetBluetoothStateAsync(false);
+            await Task.Delay(delaySec * 1000);
+            await SetBluetoothStateAsync(true);
+        }
 
         public static void RestartBL(int delaySec = 3)
         {
@@ -137,8 +146,6 @@ namespace BLETest1.ViewModel
                     MessageBox.Show($"操作失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
 
         public static bool IsBluetoothEnabled()
         {
