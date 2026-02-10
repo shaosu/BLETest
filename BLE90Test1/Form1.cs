@@ -486,5 +486,24 @@ namespace BLETest1
             }
             return (tempCrcResult = (ushort)(((tempCrcResult & 0xff) << 8) | (tempCrcResult >> 8)));
         }
+
+        private void btn_CLoseBL_Click(object sender, EventArgs e)
+        {
+            Task.Run(async () =>
+            {
+                BLETest1.ViewModel.BluetoothController controller = new BLETest1.ViewModel.BluetoothController();
+                await controller.SetBluetoothStateAsync(false);
+            });
+        }
+
+        private void btn_OpenBL_Click(object sender, EventArgs e)
+        {
+            Task.Run(async () =>
+            {
+                BLETest1.ViewModel.BluetoothController controller = new BLETest1.ViewModel.BluetoothController();
+                await controller.SetBluetoothStateAsync(true);
+            });
+
+        }
     }
 }

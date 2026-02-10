@@ -28,309 +28,357 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnWriteStr = new System.Windows.Forms.Button();
-            this.tbCode = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnServes = new System.Windows.Forms.Button();
-            this.btnFeatures = new System.Windows.Forms.Button();
-            this.btn_OptAndConn = new System.Windows.Forms.Button();
-            this.btnRead = new System.Windows.Forms.Button();
-            this.btnWriteHex = new System.Windows.Forms.Button();
-            this.tbReadWriteInfo = new System.Windows.Forms.TextBox();
-            this.listboxBleDevice = new System.Windows.Forms.ListBox();
-            this.btnSearch = new System.Windows.Forms.Button();
-            this.btnClearLog = new System.Windows.Forms.Button();
-            this.cmbServer = new System.Windows.Forms.ComboBox();
-            this.cmbFeatures = new System.Windows.Forms.ComboBox();
-            this.listboxMessage = new System.Windows.Forms.ListBox();
-            this.btn_DisConn = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txt_Read = new System.Windows.Forms.TextBox();
-            this.sp1 = new System.Windows.Forms.SplitContainer();
-            this.txt_SelectedBL = new System.Windows.Forms.TextBox();
-            this.lab_Selected = new System.Windows.Forms.Label();
-            this.btn_CRC16HL = new System.Windows.Forms.Button();
-            this.btn_CRC16 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.sp1)).BeginInit();
-            this.sp1.Panel1.SuspendLayout();
-            this.sp1.Panel2.SuspendLayout();
-            this.sp1.SuspendLayout();
-            this.SuspendLayout();
+            btnWriteStr = new Button();
+            tbCode = new TextBox();
+            label1 = new Label();
+            btnServes = new Button();
+            btnFeatures = new Button();
+            btn_OptAndConn = new Button();
+            btnRead = new Button();
+            btnWriteHex = new Button();
+            tbReadWriteInfo = new TextBox();
+            listboxBleDevice = new ListBox();
+            btnSearch = new Button();
+            btnClearLog = new Button();
+            cmbServer = new ComboBox();
+            cmbFeatures = new ComboBox();
+            listboxMessage = new ListBox();
+            btn_DisConn = new Button();
+            label2 = new Label();
+            label3 = new Label();
+            txt_Read = new TextBox();
+            sp1 = new SplitContainer();
+            btn_CLoseBL = new Button();
+            txt_SelectedBL = new TextBox();
+            lab_Selected = new Label();
+            btn_CRC16HL = new Button();
+            btn_CRC16 = new Button();
+            btn_OpenBL = new Button();
+            ((System.ComponentModel.ISupportInitialize)sp1).BeginInit();
+            sp1.Panel1.SuspendLayout();
+            sp1.Panel2.SuspendLayout();
+            sp1.SuspendLayout();
+            SuspendLayout();
             // 
             // btnWriteStr
             // 
-            this.btnWriteStr.Enabled = false;
-            this.btnWriteStr.Location = new System.Drawing.Point(298, 439);
-            this.btnWriteStr.Name = "btnWriteStr";
-            this.btnWriteStr.Size = new System.Drawing.Size(88, 24);
-            this.btnWriteStr.TabIndex = 0;
-            this.btnWriteStr.Text = "写字符串";
-            this.btnWriteStr.UseVisualStyleBackColor = true;
-            this.btnWriteStr.Click += new System.EventHandler(this.btnWriteStr_Click);
+            btnWriteStr.Enabled = false;
+            btnWriteStr.Location = new Point(447, 732);
+            btnWriteStr.Margin = new Padding(4, 5, 4, 5);
+            btnWriteStr.Name = "btnWriteStr";
+            btnWriteStr.Size = new Size(132, 40);
+            btnWriteStr.TabIndex = 0;
+            btnWriteStr.Text = "写字符串";
+            btnWriteStr.UseVisualStyleBackColor = true;
+            btnWriteStr.Click += btnWriteStr_Click;
             // 
             // tbCode
             // 
-            this.tbCode.Location = new System.Drawing.Point(69, 439);
-            this.tbCode.Name = "tbCode";
-            this.tbCode.Size = new System.Drawing.Size(223, 21);
-            this.tbCode.TabIndex = 2;
-            this.tbCode.Text = "Test1234";
+            tbCode.Location = new Point(104, 732);
+            tbCode.Margin = new Padding(4, 5, 4, 5);
+            tbCode.Name = "tbCode";
+            tbCode.Size = new Size(332, 27);
+            tbCode.TabIndex = 2;
+            tbCode.Text = "Test1234";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 448);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "字符串";
+            label1.AutoSize = true;
+            label1.Location = new Point(36, 747);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(54, 20);
+            label1.TabIndex = 3;
+            label1.Text = "字符串";
             // 
             // btnServes
             // 
-            this.btnServes.Location = new System.Drawing.Point(12, 337);
-            this.btnServes.Name = "btnServes";
-            this.btnServes.Size = new System.Drawing.Size(88, 24);
-            this.btnServes.TabIndex = 4;
-            this.btnServes.Text = "服务";
-            this.btnServes.UseVisualStyleBackColor = true;
-            this.btnServes.Click += new System.EventHandler(this.BtnServes_Click);
+            btnServes.Location = new Point(18, 562);
+            btnServes.Margin = new Padding(4, 5, 4, 5);
+            btnServes.Name = "btnServes";
+            btnServes.Size = new Size(132, 40);
+            btnServes.TabIndex = 4;
+            btnServes.Text = "服务";
+            btnServes.UseVisualStyleBackColor = true;
+            btnServes.Click += BtnServes_Click;
             // 
             // btnFeatures
             // 
-            this.btnFeatures.Enabled = false;
-            this.btnFeatures.Location = new System.Drawing.Point(12, 367);
-            this.btnFeatures.Name = "btnFeatures";
-            this.btnFeatures.Size = new System.Drawing.Size(88, 24);
-            this.btnFeatures.TabIndex = 5;
-            this.btnFeatures.Text = "特征";
-            this.btnFeatures.UseVisualStyleBackColor = true;
-            this.btnFeatures.Click += new System.EventHandler(this.BtnFeatures_Click);
+            btnFeatures.Enabled = false;
+            btnFeatures.Location = new Point(18, 612);
+            btnFeatures.Margin = new Padding(4, 5, 4, 5);
+            btnFeatures.Name = "btnFeatures";
+            btnFeatures.Size = new Size(132, 40);
+            btnFeatures.TabIndex = 5;
+            btnFeatures.Text = "特征";
+            btnFeatures.UseVisualStyleBackColor = true;
+            btnFeatures.Click += BtnFeatures_Click;
             // 
             // btn_OptAndConn
             // 
-            this.btn_OptAndConn.Enabled = false;
-            this.btn_OptAndConn.Location = new System.Drawing.Point(12, 397);
-            this.btn_OptAndConn.Name = "btn_OptAndConn";
-            this.btn_OptAndConn.Size = new System.Drawing.Size(88, 24);
-            this.btn_OptAndConn.TabIndex = 6;
-            this.btn_OptAndConn.Text = "连接";
-            this.btn_OptAndConn.UseVisualStyleBackColor = true;
-            this.btn_OptAndConn.Click += new System.EventHandler(this.btn_OptAndConn_Click);
+            btn_OptAndConn.Enabled = false;
+            btn_OptAndConn.Location = new Point(18, 662);
+            btn_OptAndConn.Margin = new Padding(4, 5, 4, 5);
+            btn_OptAndConn.Name = "btn_OptAndConn";
+            btn_OptAndConn.Size = new Size(132, 40);
+            btn_OptAndConn.TabIndex = 6;
+            btn_OptAndConn.Text = "连接";
+            btn_OptAndConn.UseVisualStyleBackColor = true;
+            btn_OptAndConn.Click += btn_OptAndConn_Click;
             // 
             // btnRead
             // 
-            this.btnRead.Enabled = false;
-            this.btnRead.Location = new System.Drawing.Point(298, 529);
-            this.btnRead.Name = "btnRead";
-            this.btnRead.Size = new System.Drawing.Size(88, 24);
-            this.btnRead.TabIndex = 7;
-            this.btnRead.Text = "读";
-            this.btnRead.UseVisualStyleBackColor = true;
-            this.btnRead.Click += new System.EventHandler(this.BtnRead_Click);
+            btnRead.Enabled = false;
+            btnRead.Location = new Point(447, 882);
+            btnRead.Margin = new Padding(4, 5, 4, 5);
+            btnRead.Name = "btnRead";
+            btnRead.Size = new Size(132, 40);
+            btnRead.TabIndex = 7;
+            btnRead.Text = "读";
+            btnRead.UseVisualStyleBackColor = true;
+            btnRead.Click += BtnRead_Click;
             // 
             // btnWriteHex
             // 
-            this.btnWriteHex.Enabled = false;
-            this.btnWriteHex.Location = new System.Drawing.Point(298, 469);
-            this.btnWriteHex.Name = "btnWriteHex";
-            this.btnWriteHex.Size = new System.Drawing.Size(88, 24);
-            this.btnWriteHex.TabIndex = 8;
-            this.btnWriteHex.Text = "写Hex";
-            this.btnWriteHex.UseVisualStyleBackColor = true;
-            this.btnWriteHex.Click += new System.EventHandler(this.BtnWriteHex_Click);
+            btnWriteHex.Enabled = false;
+            btnWriteHex.Location = new Point(447, 782);
+            btnWriteHex.Margin = new Padding(4, 5, 4, 5);
+            btnWriteHex.Name = "btnWriteHex";
+            btnWriteHex.Size = new Size(132, 40);
+            btnWriteHex.TabIndex = 8;
+            btnWriteHex.Text = "写Hex";
+            btnWriteHex.UseVisualStyleBackColor = true;
+            btnWriteHex.Click += BtnWriteHex_Click;
             // 
             // tbReadWriteInfo
             // 
-            this.tbReadWriteInfo.Location = new System.Drawing.Point(69, 466);
-            this.tbReadWriteInfo.Name = "tbReadWriteInfo";
-            this.tbReadWriteInfo.Size = new System.Drawing.Size(223, 21);
-            this.tbReadWriteInfo.TabIndex = 9;
-            this.tbReadWriteInfo.Text = "01 03 00 00 00 01 0A 84";
+            tbReadWriteInfo.Location = new Point(104, 777);
+            tbReadWriteInfo.Margin = new Padding(4, 5, 4, 5);
+            tbReadWriteInfo.Name = "tbReadWriteInfo";
+            tbReadWriteInfo.Size = new Size(332, 27);
+            tbReadWriteInfo.TabIndex = 9;
+            tbReadWriteInfo.Text = "01 03 00 00 00 01 0A 84";
             // 
             // listboxBleDevice
             // 
-            this.listboxBleDevice.FormattingEnabled = true;
-            this.listboxBleDevice.ItemHeight = 12;
-            this.listboxBleDevice.Location = new System.Drawing.Point(17, 41);
-            this.listboxBleDevice.Name = "listboxBleDevice";
-            this.listboxBleDevice.Size = new System.Drawing.Size(276, 256);
-            this.listboxBleDevice.TabIndex = 10;
-            this.listboxBleDevice.SelectedIndexChanged += new System.EventHandler(this.listboxBleDevice_SelectedIndexChanged);
+            listboxBleDevice.FormattingEnabled = true;
+            listboxBleDevice.Location = new Point(26, 68);
+            listboxBleDevice.Margin = new Padding(4, 5, 4, 5);
+            listboxBleDevice.Name = "listboxBleDevice";
+            listboxBleDevice.Size = new Size(412, 424);
+            listboxBleDevice.TabIndex = 10;
+            listboxBleDevice.SelectedIndexChanged += listboxBleDevice_SelectedIndexChanged;
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(17, 11);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(88, 24);
-            this.btnSearch.TabIndex = 11;
-            this.btnSearch.Text = "扫描";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            btnSearch.Location = new Point(26, 18);
+            btnSearch.Margin = new Padding(4, 5, 4, 5);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(132, 40);
+            btnSearch.TabIndex = 11;
+            btnSearch.Text = "扫描";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
             // 
             // btnClearLog
             // 
-            this.btnClearLog.Location = new System.Drawing.Point(362, 11);
-            this.btnClearLog.Name = "btnClearLog";
-            this.btnClearLog.Size = new System.Drawing.Size(64, 24);
-            this.btnClearLog.TabIndex = 12;
-            this.btnClearLog.Text = "清空Log";
-            this.btnClearLog.UseVisualStyleBackColor = true;
-            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
+            btnClearLog.Location = new Point(543, 18);
+            btnClearLog.Margin = new Padding(4, 5, 4, 5);
+            btnClearLog.Name = "btnClearLog";
+            btnClearLog.Size = new Size(96, 40);
+            btnClearLog.TabIndex = 12;
+            btnClearLog.Text = "清空Log";
+            btnClearLog.UseVisualStyleBackColor = true;
+            btnClearLog.Click += btnClearLog_Click;
             // 
             // cmbServer
             // 
-            this.cmbServer.FormattingEnabled = true;
-            this.cmbServer.Location = new System.Drawing.Point(106, 337);
-            this.cmbServer.Name = "cmbServer";
-            this.cmbServer.Size = new System.Drawing.Size(317, 20);
-            this.cmbServer.TabIndex = 13;
+            cmbServer.FormattingEnabled = true;
+            cmbServer.Location = new Point(159, 562);
+            cmbServer.Margin = new Padding(4, 5, 4, 5);
+            cmbServer.Name = "cmbServer";
+            cmbServer.Size = new Size(474, 28);
+            cmbServer.TabIndex = 13;
             // 
             // cmbFeatures
             // 
-            this.cmbFeatures.FormattingEnabled = true;
-            this.cmbFeatures.Location = new System.Drawing.Point(106, 366);
-            this.cmbFeatures.Name = "cmbFeatures";
-            this.cmbFeatures.Size = new System.Drawing.Size(317, 20);
-            this.cmbFeatures.TabIndex = 14;
+            cmbFeatures.FormattingEnabled = true;
+            cmbFeatures.Location = new Point(159, 610);
+            cmbFeatures.Margin = new Padding(4, 5, 4, 5);
+            cmbFeatures.Name = "cmbFeatures";
+            cmbFeatures.Size = new Size(474, 28);
+            cmbFeatures.TabIndex = 14;
             // 
             // listboxMessage
             // 
-            this.listboxMessage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listboxMessage.FormattingEnabled = true;
-            this.listboxMessage.ItemHeight = 12;
-            this.listboxMessage.Location = new System.Drawing.Point(0, 0);
-            this.listboxMessage.Name = "listboxMessage";
-            this.listboxMessage.Size = new System.Drawing.Size(821, 640);
-            this.listboxMessage.TabIndex = 15;
+            listboxMessage.Dock = DockStyle.Fill;
+            listboxMessage.FormattingEnabled = true;
+            listboxMessage.Location = new Point(0, 0);
+            listboxMessage.Margin = new Padding(4, 5, 4, 5);
+            listboxMessage.Name = "listboxMessage";
+            listboxMessage.Size = new Size(1232, 1067);
+            listboxMessage.TabIndex = 15;
             // 
             // btn_DisConn
             // 
-            this.btn_DisConn.Location = new System.Drawing.Point(111, 397);
-            this.btn_DisConn.Name = "btn_DisConn";
-            this.btn_DisConn.Size = new System.Drawing.Size(88, 24);
-            this.btn_DisConn.TabIndex = 16;
-            this.btn_DisConn.Text = "断开";
-            this.btn_DisConn.UseVisualStyleBackColor = true;
-            this.btn_DisConn.Click += new System.EventHandler(this.btn_DisConnect_Click);
+            btn_DisConn.Location = new Point(166, 662);
+            btn_DisConn.Margin = new Padding(4, 5, 4, 5);
+            btn_DisConn.Name = "btn_DisConn";
+            btn_DisConn.Size = new Size(132, 40);
+            btn_DisConn.TabIndex = 16;
+            btn_DisConn.Text = "断开";
+            btn_DisConn.UseVisualStyleBackColor = true;
+            btn_DisConn.Click += btn_DisConnect_Click;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(36, 475);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(23, 12);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Hex";
+            label2.AutoSize = true;
+            label2.Location = new Point(54, 792);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(38, 20);
+            label2.TabIndex = 17;
+            label2.Text = "Hex";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(28, 535);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 12);
-            this.label3.TabIndex = 18;
-            this.label3.Text = "读回:";
+            label3.AutoSize = true;
+            label3.Location = new Point(42, 892);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(43, 20);
+            label3.TabIndex = 18;
+            label3.Text = "读回:";
             // 
             // txt_Read
             // 
-            this.txt_Read.Location = new System.Drawing.Point(69, 532);
-            this.txt_Read.Name = "txt_Read";
-            this.txt_Read.ReadOnly = true;
-            this.txt_Read.Size = new System.Drawing.Size(223, 21);
-            this.txt_Read.TabIndex = 19;
+            txt_Read.Location = new Point(104, 887);
+            txt_Read.Margin = new Padding(4, 5, 4, 5);
+            txt_Read.Name = "txt_Read";
+            txt_Read.ReadOnly = true;
+            txt_Read.Size = new Size(332, 27);
+            txt_Read.TabIndex = 19;
             // 
             // sp1
             // 
-            this.sp1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sp1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.sp1.IsSplitterFixed = true;
-            this.sp1.Location = new System.Drawing.Point(0, 0);
-            this.sp1.Name = "sp1";
+            sp1.Dock = DockStyle.Fill;
+            sp1.FixedPanel = FixedPanel.Panel1;
+            sp1.IsSplitterFixed = true;
+            sp1.Location = new Point(0, 0);
+            sp1.Margin = new Padding(4, 5, 4, 5);
+            sp1.Name = "sp1";
             // 
             // sp1.Panel1
             // 
-            this.sp1.Panel1.Controls.Add(this.txt_SelectedBL);
-            this.sp1.Panel1.Controls.Add(this.lab_Selected);
-            this.sp1.Panel1.Controls.Add(this.btn_CRC16HL);
-            this.sp1.Panel1.Controls.Add(this.btn_CRC16);
-            this.sp1.Panel1.Controls.Add(this.btnSearch);
-            this.sp1.Panel1.Controls.Add(this.txt_Read);
-            this.sp1.Panel1.Controls.Add(this.btnWriteStr);
-            this.sp1.Panel1.Controls.Add(this.label3);
-            this.sp1.Panel1.Controls.Add(this.tbCode);
-            this.sp1.Panel1.Controls.Add(this.label2);
-            this.sp1.Panel1.Controls.Add(this.label1);
-            this.sp1.Panel1.Controls.Add(this.btn_DisConn);
-            this.sp1.Panel1.Controls.Add(this.btnServes);
-            this.sp1.Panel1.Controls.Add(this.cmbFeatures);
-            this.sp1.Panel1.Controls.Add(this.btnFeatures);
-            this.sp1.Panel1.Controls.Add(this.cmbServer);
-            this.sp1.Panel1.Controls.Add(this.btn_OptAndConn);
-            this.sp1.Panel1.Controls.Add(this.btnClearLog);
-            this.sp1.Panel1.Controls.Add(this.btnRead);
-            this.sp1.Panel1.Controls.Add(this.btnWriteHex);
-            this.sp1.Panel1.Controls.Add(this.listboxBleDevice);
-            this.sp1.Panel1.Controls.Add(this.tbReadWriteInfo);
+            sp1.Panel1.Controls.Add(btn_OpenBL);
+            sp1.Panel1.Controls.Add(btn_CLoseBL);
+            sp1.Panel1.Controls.Add(txt_SelectedBL);
+            sp1.Panel1.Controls.Add(lab_Selected);
+            sp1.Panel1.Controls.Add(btn_CRC16HL);
+            sp1.Panel1.Controls.Add(btn_CRC16);
+            sp1.Panel1.Controls.Add(btnSearch);
+            sp1.Panel1.Controls.Add(txt_Read);
+            sp1.Panel1.Controls.Add(btnWriteStr);
+            sp1.Panel1.Controls.Add(label3);
+            sp1.Panel1.Controls.Add(tbCode);
+            sp1.Panel1.Controls.Add(label2);
+            sp1.Panel1.Controls.Add(label1);
+            sp1.Panel1.Controls.Add(btn_DisConn);
+            sp1.Panel1.Controls.Add(btnServes);
+            sp1.Panel1.Controls.Add(cmbFeatures);
+            sp1.Panel1.Controls.Add(btnFeatures);
+            sp1.Panel1.Controls.Add(cmbServer);
+            sp1.Panel1.Controls.Add(btn_OptAndConn);
+            sp1.Panel1.Controls.Add(btnClearLog);
+            sp1.Panel1.Controls.Add(btnRead);
+            sp1.Panel1.Controls.Add(btnWriteHex);
+            sp1.Panel1.Controls.Add(listboxBleDevice);
+            sp1.Panel1.Controls.Add(tbReadWriteInfo);
             // 
             // sp1.Panel2
             // 
-            this.sp1.Panel2.Controls.Add(this.listboxMessage);
-            this.sp1.Size = new System.Drawing.Size(1256, 640);
-            this.sp1.SplitterDistance = 431;
-            this.sp1.TabIndex = 20;
+            sp1.Panel2.Controls.Add(listboxMessage);
+            sp1.Size = new Size(1884, 1067);
+            sp1.SplitterDistance = 646;
+            sp1.SplitterWidth = 6;
+            sp1.TabIndex = 20;
+            // 
+            // btn_CLoseBL
+            // 
+            btn_CLoseBL.Location = new Point(506, 68);
+            btn_CLoseBL.Name = "btn_CLoseBL";
+            btn_CLoseBL.Size = new Size(127, 43);
+            btn_CLoseBL.TabIndex = 24;
+            btn_CLoseBL.Text = "关闭蓝牙";
+            btn_CLoseBL.UseVisualStyleBackColor = true;
+            btn_CLoseBL.Click += btn_CLoseBL_Click;
             // 
             // txt_SelectedBL
             // 
-            this.txt_SelectedBL.Location = new System.Drawing.Point(104, 310);
-            this.txt_SelectedBL.Name = "txt_SelectedBL";
-            this.txt_SelectedBL.ReadOnly = true;
-            this.txt_SelectedBL.Size = new System.Drawing.Size(319, 21);
-            this.txt_SelectedBL.TabIndex = 23;
+            txt_SelectedBL.Location = new Point(156, 517);
+            txt_SelectedBL.Margin = new Padding(4, 5, 4, 5);
+            txt_SelectedBL.Name = "txt_SelectedBL";
+            txt_SelectedBL.ReadOnly = true;
+            txt_SelectedBL.Size = new Size(476, 27);
+            txt_SelectedBL.TabIndex = 23;
             // 
             // lab_Selected
             // 
-            this.lab_Selected.AutoSize = true;
-            this.lab_Selected.Location = new System.Drawing.Point(19, 311);
-            this.lab_Selected.Name = "lab_Selected";
-            this.lab_Selected.Size = new System.Drawing.Size(71, 12);
-            this.lab_Selected.TabIndex = 22;
-            this.lab_Selected.Text = "选中的蓝牙:";
+            lab_Selected.AutoSize = true;
+            lab_Selected.Location = new Point(28, 518);
+            lab_Selected.Margin = new Padding(4, 0, 4, 0);
+            lab_Selected.Name = "lab_Selected";
+            lab_Selected.Size = new Size(88, 20);
+            lab_Selected.TabIndex = 22;
+            lab_Selected.Text = "选中的蓝牙:";
             // 
             // btn_CRC16HL
             // 
-            this.btn_CRC16HL.Location = new System.Drawing.Point(163, 493);
-            this.btn_CRC16HL.Name = "btn_CRC16HL";
-            this.btn_CRC16HL.Size = new System.Drawing.Size(88, 24);
-            this.btn_CRC16HL.TabIndex = 21;
-            this.btn_CRC16HL.Text = "CRC16-HL";
-            this.btn_CRC16HL.UseVisualStyleBackColor = true;
-            this.btn_CRC16HL.Click += new System.EventHandler(this.btn_CRC16HL_Click);
+            btn_CRC16HL.Location = new Point(244, 822);
+            btn_CRC16HL.Margin = new Padding(4, 5, 4, 5);
+            btn_CRC16HL.Name = "btn_CRC16HL";
+            btn_CRC16HL.Size = new Size(132, 40);
+            btn_CRC16HL.TabIndex = 21;
+            btn_CRC16HL.Text = "CRC16-HL";
+            btn_CRC16HL.UseVisualStyleBackColor = true;
+            btn_CRC16HL.Click += btn_CRC16HL_Click;
             // 
             // btn_CRC16
             // 
-            this.btn_CRC16.Location = new System.Drawing.Point(69, 493);
-            this.btn_CRC16.Name = "btn_CRC16";
-            this.btn_CRC16.Size = new System.Drawing.Size(88, 24);
-            this.btn_CRC16.TabIndex = 20;
-            this.btn_CRC16.Text = "ModBusCRC";
-            this.btn_CRC16.UseVisualStyleBackColor = true;
-            this.btn_CRC16.Click += new System.EventHandler(this.btn_CRC16_Click);
+            btn_CRC16.Location = new Point(104, 822);
+            btn_CRC16.Margin = new Padding(4, 5, 4, 5);
+            btn_CRC16.Name = "btn_CRC16";
+            btn_CRC16.Size = new Size(132, 40);
+            btn_CRC16.TabIndex = 20;
+            btn_CRC16.Text = "ModBusCRC";
+            btn_CRC16.UseVisualStyleBackColor = true;
+            btn_CRC16.Click += btn_CRC16_Click;
+            // 
+            // btn_OpenBL
+            // 
+            btn_OpenBL.Location = new Point(505, 117);
+            btn_OpenBL.Name = "btn_OpenBL";
+            btn_OpenBL.Size = new Size(127, 43);
+            btn_OpenBL.TabIndex = 26;
+            btn_OpenBL.Text = "打开蓝牙";
+            btn_OpenBL.UseVisualStyleBackColor = true;
+            btn_OpenBL.Click += btn_OpenBL_Click;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1256, 640);
-            this.Controls.Add(this.sp1);
-            this.Name = "Form1";
-            this.Text = "ESP32-PICO-D4 BLE蓝牙测试V1.0.0";
-            this.sp1.Panel1.ResumeLayout(false);
-            this.sp1.Panel1.PerformLayout();
-            this.sp1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.sp1)).EndInit();
-            this.sp1.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(9F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1884, 1067);
+            Controls.Add(sp1);
+            Margin = new Padding(4, 5, 4, 5);
+            Name = "Form1";
+            Text = "ESP32-PICO-D4 BLE蓝牙测试V1.0.0";
+            sp1.Panel1.ResumeLayout(false);
+            sp1.Panel1.PerformLayout();
+            sp1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)sp1).EndInit();
+            sp1.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
@@ -360,6 +408,8 @@
         private System.Windows.Forms.Button btn_CRC16HL;
         private System.Windows.Forms.TextBox txt_SelectedBL;
         private System.Windows.Forms.Label lab_Selected;
+        private Button btn_CLoseBL;
+        private Button btn_OpenBL;
     }
 }
 
