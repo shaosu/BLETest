@@ -19,8 +19,8 @@ namespace BLETest1.UserControls
 {
     public partial class uc_SleepLoopTest : UserControlBase
     {
-        double MaxSleepCurrent_mA = 1.0;
-        int SleepUpLoopDelaySec = 60;
+        double MaxSleepCurrent_mA = 5.0;
+        int SleepUpLoopDelaySec = 30;
         private long SendCount = 0;
         private long RecvCount = 0;
 
@@ -30,7 +30,7 @@ namespace BLETest1.UserControls
         private long WakeUpCount = 0;
         private long WakeUpFaultCount = 0;
 
-        private long SleepUpLoopCount = 0;
+        private long SleepUpLoopCount = 1;
 
         private bool HaveSleepFault = false;
         private bool SleepFailedStop = false;
@@ -38,7 +38,7 @@ namespace BLETest1.UserControls
         bool FindCharacterEnd = false;
         bool FindServiceEnd = false;
         bool ScanResultEnd = false;
-
+        bool ConnedFlag = false;
         public uc_SleepLoopTest()
         {
             InitializeComponent();
@@ -52,7 +52,7 @@ namespace BLETest1.UserControls
 
         private void uc_SleepLoopTest_Load(object sender, EventArgs e)
         {
-            com_BLList.SelectedIndex = 0;
+            com_BLList.SelectedIndex = 1;
             com_SleepCurrentSrc.SelectedIndex = 0;
             com_VirPadPort_Click(sender, e);
             if (com_VirPadPort.Items.Count > 0) com_VirPadPort.SelectedIndex = 0;
@@ -63,7 +63,7 @@ namespace BLETest1.UserControls
         private void UseStartParam()
         {
             if (StartParam == null) return;
-    
+
             com_BLList.SelectedIndex = StartParam.BLSelectIndex;
             txt_MAC.Text = StartParam.MAC;
             txt_tagService.Text = StartParam.ServiceUUID;
@@ -130,14 +130,14 @@ namespace BLETest1.UserControls
                 SleepCurrentSrc = com_SleepCurrentSrc.SelectedIndex,
                 DelayForGetCurrent = (int)nmu_DelayForGetCurrent.Value,
             };
-
+            AppendMessageWithTime("重启中");
             StartParam.AppExitAndRestart(param);
         }
 
 
         internal override void AppendToLogFile(string timeMsg)
         {
-            string file = $"Log\\循环休眠测试{DateTime.Now.ToString("yyyMMdd")}.txt";
+            string file = $"Log\\循环休眠测试{DateTime.Now.ToString("yyyyMMdd")}.txt";
             if (Directory.Exists("Log") == false)
             {
                 Directory.CreateDirectory("Log");
@@ -148,7 +148,6 @@ namespace BLETest1.UserControls
         private void btnClearLog_Click(object sender, EventArgs e)
         {
             listboxMessage.Items.Clear();
-            BulidParamAndRestart();
         }
 
         private async Task DisConnAndClear(BleCore2 ble, ConnectedDeviceParam connParam)
@@ -171,6 +170,7 @@ namespace BLETest1.UserControls
             }
             GC.Collect();
         }
+        static int NotFindMACCounter = 0;
 
         private byte[] sleepCmd = new byte[] { 0x01, 0x10, 0x00, 0x3B, 0x00, 0x01, 0x02, 0x00, 0x20, 0xA3, 0x03 };
         private void btn_Test_Click(object sender, EventArgs e)
@@ -190,6 +190,7 @@ namespace BLETest1.UserControls
                 ScanResultEnd = false;
                 FindServiceEnd = false;
                 FindCharacterEnd = false;
+                ConnedFlag = false;
                 BleCore2 ble = new BleCore2();
                 ConnectedDeviceParam connParam = null;
                 try
@@ -218,8 +219,20 @@ namespace BLETest1.UserControls
                         var dev = ble.DeviceList[i];
                         AppendMessageWithTime($"扫描结果:{i + 1} {dev}");
                     }
-                    var devex = ble.DeviceList.Where(a => a.MAC == tagMac).First();
+                    var devex = ble.DeviceList.Where(a => a.MAC == tagMac).FirstOrDefault();
                     connParam.dev = devex;
+                    if (devex == null)
+                    {
+                        AppendMessageWithTime($"不到指定蓝牙:{tagMac} {NotFindMACCounter}次");
+                        NotFindMACCounter++;
+                        AppendMessageWithTime($"重启蓝牙!");
+                        BluetoothController.RestartBL(3);
+                        return;
+                    }
+                    else
+                    {
+                        NotFindMACCounter = 0;
+                    }
 
                     AppendMessageWithTime("查找服务");
                     ble.FindService(10, devex);
@@ -233,6 +246,10 @@ namespace BLETest1.UserControls
                     }
                     var Service = devex.ServiceList.Where(a => a.Uuid.ToString().ToLower() == tagService).First();
                     connParam.service = Service;
+                    if (Service != null)
+                    {
+                        ConnedFlag = true;
+                    }
                     if (true)
                     {
                         AppendMessageWithTime("查找特征");
@@ -269,8 +286,8 @@ namespace BLETest1.UserControls
 
                         // 连接成功后延迟多少秒发送休眠命令
                         Thread.Sleep(5 * 1000);
+                        AppendMessageWithTime($"发送休眠命令前延迟:{5}秒");
 
-                        AppendMessageWithTime("发送休眠命令");
                         RecvSleepCmdRT = false;
                         for (int i = 0; i < 30; i++) // 3次
                         {
@@ -278,6 +295,8 @@ namespace BLETest1.UserControls
                             {
                                 if (i % 10 == 0) // 1秒触发一次
                                 {
+                                    string hex = string.Join(" ", sleepCmd.Select(a => a.ToString("X2")).ToArray());
+                                    AppendMessageWithTime($"发送休眠命令:{hex}");
                                     ble.SendData(sleepCmd);
                                 }
                             }
@@ -289,9 +308,13 @@ namespace BLETest1.UserControls
                         }
 
                         if (RecvSleepCmdRT)
+                        {
                             AppendMessageWithTime("发送休眠命令:成功");
+                        }
                         else
+                        {
                             AppendMessageWithTime("发送休眠命令:失败");
+                        }
                     }
                     Thread.Sleep(100);
                 }
@@ -301,10 +324,13 @@ namespace BLETest1.UserControls
                 }
                 finally
                 {
+                    BluetoothController.RestartBL(3);
                     DisConnAndClear(ble, connParam).Wait();
                     ble = null;
                     connParam = null;
                     GC.Collect();
+                    Thread.Sleep(2000);
+                    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
                     FlashTJ();
                 }
 
@@ -406,8 +432,8 @@ namespace BLETest1.UserControls
                         ble.ConnectDevice(connParam).Wait();
 
                         RecvWakeUpData = false;
-                        long minLoopCount = 3;
-                        if (CheckLoop == false) minLoopCount = 3;
+                        long minLoopCount = 2;
+                        if (CheckLoop == false) minLoopCount = 2;
                         for (long i = 0; i < minLoopCount; i++)
                         {
                             Thread.Sleep(500);
@@ -442,10 +468,13 @@ namespace BLETest1.UserControls
                 }
                 finally
                 {
+                    BluetoothController.RestartBL(3);
                     DisConnAndClear(ble, connParam).Wait();
                     ble = null;
                     connParam = null;
                     GC.Collect();
+                    Thread.Sleep(2000);
+                    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
                     FlashTJ();
                 }
             });
@@ -456,13 +485,16 @@ namespace BLETest1.UserControls
                 {
                     TaskSleep.Start();
                     TaskSleep.Wait();
-                    CheckSleepCurrent.Start();
-                    CheckSleepCurrent.Wait();
-                    TaskWakeUp.Start();
-                    TaskWakeUp.Wait();
+                    if (ConnedFlag)
+                    {
+                        CheckSleepCurrent.Start();
+                        CheckSleepCurrent.Wait();
+                        TaskWakeUp.Start();
+                        TaskWakeUp.Wait();
+                    }
                     if (CheckLoop)
                     {
-                        AppendMessageWithTime($"完成一轮休眠唤醒进行延迟{SleepUpLoopDelaySec}秒");
+                        AppendMessageWithTime($"完成一轮休眠唤醒,开始进行延迟{SleepUpLoopDelaySec}秒");
                         Thread.Sleep(SleepUpLoopDelaySec * 1000);
                     }
                 }
@@ -472,9 +504,18 @@ namespace BLETest1.UserControls
                 }
                 finally
                 {
-                    AppendMessageWithTime($"===执行结束:第{SleepUpLoopCount++}轮===");
-                    Form1.SetControlEnable(btn_Test, true);
+                    AppendMessageWithTime($"===执行结束:第{SleepUpLoopCount++}轮,休眠成功次数:{SleepCount} 休眠失败次数:{SleepFaultCount},唤醒成功次数:{WakeUpCount} 唤醒失败次数:{WakeUpFaultCount}===");
                     FlashTJ();
+
+                    if (CheckLoop && NotFindMACCounter >= AutoRestartCount)
+                    {
+                        BulidParamAndRestart();
+                    }
+                    else
+                    {
+                        Form1.SetControlEnable(btn_Test, true);
+                        Form1.SetControlEnable(btn_Scan, true);
+                    }
                 }
             });
 
@@ -562,7 +603,7 @@ namespace BLETest1.UserControls
             {
                 AppendMessageWithTime("接收数据:" + hex + $" 接收次数:{RecvCount++}");
             }
-            if (data[1] == 0x11)
+            if (data[1] == 0x10)
             {
                 RecvSleepCmdRT = true;
             }
@@ -662,10 +703,10 @@ namespace BLETest1.UserControls
                 var sp = DateTime.Now - StartTime;
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine($"发送:{SendCount} 接收:{RecvCount}");
-                sb.AppendLine($"休眠次数:{SleepCount} 休眠失败次数:{SleepFaultCount}");
-                sb.AppendLine($"唤醒次数:{WakeUpCount} 唤醒次数次数:{WakeUpFaultCount}");
+                sb.AppendLine($"休眠成功次数:{SleepCount} 休眠失败次数:{SleepFaultCount}");
+                sb.AppendLine($"唤醒成功次数:{WakeUpCount} 唤醒失败次数:{WakeUpFaultCount}");
                 sb.AppendLine($"循环次数:{SleepUpLoopCount}");
-                sb.AppendLine($"开始时间:{StartTime.ToString("yyyy-MM-dd HH:mm:ss")} 时长:{sp.TotalHours:F4}H");
+                sb.AppendLine($"开始时间:{StartTime.ToString("yyyy-MM-dd HH:mm:ss")}时长: {sp.TotalHours:F4}H");
                 txt_TJ.Text = sb.ToString();
             }
         }
@@ -704,6 +745,73 @@ namespace BLETest1.UserControls
         private void nmu_DelayForGetCurrent_ValueChanged(object sender, EventArgs e)
         {
             DelayForGetCurrentSec = (int)nmu_DelayForGetCurrent.Value;
+        }
+
+        private void num_minDb_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_Scan_Click(object sender, EventArgs e)
+        {
+            string filterName = txt_filterName.Text.Trim();
+            short mindb = (short)num_minDb.Value;
+            Form1.SetControlEnable(btn_Test, false);
+            Form1.SetControlEnable(btn_Scan, false);
+
+            Task.Run(async () =>
+            {
+                ScanResultEnd = false;
+                BleCore2 ble = new BleCore2();
+                ConnectedDeviceParam connParam = null;
+                try
+                {
+                    AppendMessageWithTime("扫描");
+                    ble.StartScan(10, mindb, filterName);
+
+                    ble.ScanResultEvent += Ble_ScanResultEvent;
+                    connParam = new ConnectedDeviceParam();
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        await Task.Delay(1000);
+                        if (ScanResultEnd)
+                        {
+                            break;
+                        }
+                    }
+                    AppendMessageWithTime($"扫描结果:{ble.DeviceList.Count}个");
+                    for (int i = 0; i < ble.DeviceList.Count; i++)
+                    {
+                        var dev = ble.DeviceList[i];
+                        AppendMessageWithTime($"扫描结果:{i + 1} {dev}");
+                    }
+                    await Task.Delay(500);
+                }
+                catch (Exception ex)
+                {
+                    AppendMessageWithTime("执行异常:" + ex.Message);
+                }
+                finally
+                {
+                    if (ble != null)
+                    {
+                        ble.ScanResultEvent -= Ble_ScanResultEvent;
+                    }
+                    ble = null;
+                    connParam = null;
+                    AppendMessageWithTime("===执行结束===");
+                    GC.Collect();
+                    Form1.SetControlEnable(btn_Test, true);
+                    Form1.SetControlEnable(btn_Scan, true);
+                }
+            });
+        }
+
+        int AutoRestartCount = 5;
+        private void nmu_AutoRestartCount_ValueChanged(object sender, EventArgs e)
+        {
+            AutoRestartCount = (int)nmu_AutoRestartCount.Value;
         }
     }
 }

@@ -223,17 +223,17 @@ namespace BLETest1.ViewModel
         /// <summary>
         /// 搜索蓝牙设备 方法2
         /// </summary>
-        public void StartBleDevicewatcher()
+        public void StartBleDevicewatcher(short minDB)
         {
             watcher = new BluetoothLEAdvertisementWatcher();
 
             watcher.ScanningMode = BluetoothLEScanningMode.Active;
 
             // only activate the watcher when we're recieving values >= -80
-            watcher.SignalStrengthFilter.InRangeThresholdInDBm = -80;
+            watcher.SignalStrengthFilter.InRangeThresholdInDBm = minDB;
 
             // stop watching if the value drops below -90 (user walked away)
-            watcher.SignalStrengthFilter.OutOfRangeThresholdInDBm = -90;
+            watcher.SignalStrengthFilter.OutOfRangeThresholdInDBm = (short)(minDB - 20);
 
             // register callback for when we see an advertisements
             watcher.Received += OnAdvertisementReceived;
@@ -256,6 +256,7 @@ namespace BLETest1.ViewModel
             string msg = "自动发现设备停止";
             this.MessageChanged(MsgType.NotifyTxt, msg);
         }
+        public string FilterName = string.Empty;
 
         private void OnAdvertisementReceived(BluetoothLEAdvertisementWatcher watcher, BluetoothLEAdvertisementReceivedEventArgs eventArgs)
         {
@@ -282,6 +283,12 @@ namespace BLETest1.ViewModel
                                 return;
                             }
 
+                            if (string.IsNullOrWhiteSpace(FilterName) == false
+                            && currentDevice.Name.Contains(FilterName) == false)
+                            {
+                                return;
+                            }
+
                             Boolean contain = false;
                             MyBluetoothLEDeviceEx curEx = null;
 
@@ -289,10 +296,13 @@ namespace BLETest1.ViewModel
                             for (int i = 0; i < c; i++) //过滤重复的设备
                             {
                                 MyBluetoothLEDeviceEx device = DevicesList[i];
-                                if (device.BLE.DeviceId == currentDevice.DeviceId)
+                                if (device.BLE != null)
                                 {
-                                    contain = true;
-                                    curEx = device;
+                                    if (device.BLE.DeviceId == currentDevice.DeviceId)
+                                    {
+                                        contain = true;
+                                        curEx = device;
+                                    }
                                 }
                             }
 
@@ -700,7 +710,7 @@ namespace BLETest1.ViewModel
                 }
             };
         }
-   
+
         /// <summary>
         /// 接受到蓝牙数据
         /// </summary>
@@ -717,7 +727,7 @@ namespace BLETest1.ViewModel
                 var tmp = MiTemperatureSensor.ParseTemperatureData(data);
                 format += tmp.ToString();
             }
-           
+
             this.MessageChanged(MsgType.BleRecData, format, data);
         }
 

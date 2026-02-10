@@ -16,8 +16,7 @@ namespace BLETest1.UserControls
     public class UserControlBase : UserControl
     {
         internal System.Windows.Forms.ListBox listboxMessage;
-        internal StartParam StartParam;
-
+        public StartParam StartParam;
         public void UI_Invoke(Action action)
         {
             if (this.InvokeRequired)
@@ -71,6 +70,12 @@ namespace BLETest1.UserControls
             if (listboxMessage.Items.Count > 5000)
             {
                 listboxMessage.Items.Clear();
+            }
+
+            if (listboxMessage.Items.Count > 0)
+            {
+                listboxMessage.SelectedIndex = listboxMessage.Items.Count - 1;
+                listboxMessage.SelectedIndex = -1; // 可选：取消选中状态，只保留滚动位置
             }
             AppendToLogFile(hb);
         }

@@ -38,16 +38,14 @@ namespace BLETest1.UserControls
         }
         private void uc_ConnDisConnTest_Load(object sender, EventArgs e)
         {
-            com_BLList.SelectedIndex = 0;
+            com_BLList.SelectedIndex = 1;
             com_LoopMode.SelectedIndex = 0;
             UseStartParam();
         }
-
-
         private void UseStartParam()
         {
             if (StartParam == null) return;
-            com_LoopMode.SelectedIndex = (int)StartParam.RunType;
+            com_LoopMode.SelectedIndex = (int)StartParam.LoopReadP.LoopType;
             com_BLList.SelectedIndex = StartParam.BLSelectIndex;
             txt_MAC.Text = StartParam.MAC;
             txt_tagService.Text = StartParam.ServiceUUID;
@@ -65,16 +63,6 @@ namespace BLETest1.UserControls
             {
                 chk_DLLDebugLoop.Checked = true;
             }
-        }
-
-        internal override void AppendToLogFile(string timeMsg)
-        {
-            string file = $"Log\\循环读测试{DateTime.Now.ToString("yyyMMdd")}.txt";
-            if (Directory.Exists("Log") == false)
-            {
-                Directory.CreateDirectory("Log");
-            }
-            File.AppendAllText(file, timeMsg + Environment.NewLine);
         }
 
         private void BulidParamAndRestart()
@@ -100,15 +88,26 @@ namespace BLETest1.UserControls
             param.FilterName = txt_filterName.Text;
             param.MinDB = (short)num_minDb.Value;
             param.LoopReadP = new LoopReadParam();
-            param.LoopReadP.LoopType = com_BLList.SelectedIndex;
+            param.LoopReadP.LoopType = com_LoopMode.SelectedIndex;
             param.LoopReadP.ReadCount = (ushort)num_ReadCount.Value;
             param.LoopReadP.ReadIntervalMs = (int)num_ReadDelay.Value;
+            AppendMessageWithTime("重启中");
             StartParam.AppExitAndRestart(param);
         }
+
+        internal override void AppendToLogFile(string timeMsg)
+        {
+            string file = $"Log\\循环读测试{DateTime.Now.ToString("yyyyMMdd")}.txt";
+            if (Directory.Exists("Log") == false)
+            {
+                Directory.CreateDirectory("Log");
+            }
+            File.AppendAllText(file, timeMsg + Environment.NewLine);
+        }
+
         private void btnClearLog_Click(object sender, EventArgs e)
         {
             listboxMessage.Items.Clear();
-            BulidParamAndRestart();
         }
 
         private async Task DisConnAndClear(BleCore2 ble, ConnectedDeviceParam connParam)
@@ -131,6 +130,7 @@ namespace BLETest1.UserControls
             }
             GC.Collect();
         }
+        static int NotFindMACCounter = 0;
 
         private void btn_Test_Click(object sender, EventArgs e)
         {
@@ -141,6 +141,7 @@ namespace BLETest1.UserControls
             string filterName = txt_filterName.Text.Trim();
             short mindb = (short)num_minDb.Value;
             Form1.SetControlEnable(btn_Test, false);
+            Form1.SetControlEnable(btn_Scan, false);
 
             Task.Run(async () =>
             {
@@ -175,9 +176,20 @@ namespace BLETest1.UserControls
                         var dev = ble.DeviceList[i];
                         AppendMessageWithTime($"扫描结果:{i + 1} {dev}");
                     }
-                    var devex = ble.DeviceList.Where(a => a.MAC == tagMac).First();
+                    var devex = ble.DeviceList.Where(a => a.MAC == tagMac).FirstOrDefault();
                     connParam.dev = devex;
-
+                    if (devex == null)
+                    {
+                        NotFindMACCounter++;
+                        AppendMessageWithTime($"重启蓝牙!");
+                        BluetoothController.RestartBL(3);
+                        AppendMessageWithTime($"不到指定蓝牙:{tagMac} {NotFindMACCounter}次");
+                        return;
+                    }
+                    else
+                    {
+                        NotFindMACCounter = 0;
+                    }
                     AppendMessageWithTime("查找服务");
                     ble.FindService(10, devex);
                     for (int i = 0; i < 10; i++)
@@ -234,12 +246,25 @@ namespace BLETest1.UserControls
                 finally
                 {
                     await DisConnAndClear(ble, connParam);
+                    BluetoothController.RestartBL(3);
                     ble = null;
                     connParam = null;
                     AppendMessageWithTime("===执行结束===");
                     GC.Collect();
-                    Form1.SetControlEnable(btn_Test, true);
+                    await Task.Delay(2000);
+                    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
+                    await Task.Delay(2000);
                     FlashTJ();
+      
+                    if (CheckLoop && NotFindMACCounter >= AutoRestartCount)
+                    {
+                        BulidParamAndRestart();
+                    }
+                    else
+                    {
+                        Form1.SetControlEnable(btn_Test, true);
+                        Form1.SetControlEnable(btn_Scan, true);
+                    }
                 }
             });
         }
@@ -414,6 +439,73 @@ namespace BLETest1.UserControls
                 LMood = (LoopMode)com_LoopMode.SelectedIndex;
             }
 
+        }
+
+        private void num_minDb_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_Scan_Click(object sender, EventArgs e)
+        {
+            string filterName = txt_filterName.Text.Trim();
+            short mindb = (short)num_minDb.Value;
+            Form1.SetControlEnable(btn_Test, false);
+            Form1.SetControlEnable(btn_Scan, false);
+
+            Task.Run(async () =>
+            {
+                ScanResultEnd = false;
+                BleCore2 ble = new BleCore2();
+                ConnectedDeviceParam connParam = null;
+                try
+                {
+                    AppendMessageWithTime("扫描");
+                    ble.StartScan(10, mindb, filterName);
+
+                    ble.ScanResultEvent += Ble_ScanResultEvent;
+                    connParam = new ConnectedDeviceParam();
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        await Task.Delay(1000);
+                        if (ScanResultEnd)
+                        {
+                            break;
+                        }
+                    }
+                    AppendMessageWithTime($"扫描结果:{ble.DeviceList.Count}个");
+                    for (int i = 0; i < ble.DeviceList.Count; i++)
+                    {
+                        var dev = ble.DeviceList[i];
+                        AppendMessageWithTime($"扫描结果:{i + 1} {dev}");
+                    }
+                    await Task.Delay(500);
+                }
+                catch (Exception ex)
+                {
+                    AppendMessageWithTime("执行异常:" + ex.Message);
+                }
+                finally
+                {
+                    if (ble != null)
+                    {
+                        ble.ScanResultEvent -= Ble_ScanResultEvent;
+                    }
+                    ble = null;
+                    connParam = null;
+                    AppendMessageWithTime("===执行结束===");
+                    GC.Collect();
+                    Form1.SetControlEnable(btn_Test, true);
+                    Form1.SetControlEnable(btn_Scan, true);
+                }
+            });
+        }
+
+        int AutoRestartCount = 5;
+        private void nmu_AutoRestartCount_ValueChanged(object sender, EventArgs e)
+        {
+            AutoRestartCount = (int)nmu_AutoRestartCount.Value;
         }
     }
 }

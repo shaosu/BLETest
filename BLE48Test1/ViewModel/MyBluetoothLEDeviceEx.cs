@@ -17,11 +17,13 @@ namespace BLETest1.ViewModel
         public string Name { get; set; }
         public string MAC { get; set; }
 
+
+
         public static string BuildMac(ulong BluetoothAddress)
         {
             byte[] _Bytes1 = BitConverter.GetBytes(BluetoothAddress);
             Array.Reverse(_Bytes1);
-            string MAC = BitConverter.ToString(_Bytes1, 2, 6).Replace('-', ':').ToUpper();
+            string MAC = BitConverter.ToString(_Bytes1, 2, 6).Replace('-', ':').ToLower();
             return MAC;
         }
 

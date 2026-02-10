@@ -1,5 +1,4 @@
-﻿using BLETest1.UserControls;
-using BLETest1.ViewModel;
+﻿using BLETest1.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +12,6 @@ namespace BLETest1
     {
         private bool Closing = false;
         private ContextMenuStrip contextMenuStrip1;
-
         public Form1()
         {
             InitializeComponent();
@@ -52,7 +50,6 @@ namespace BLETest1
                     break;
             }
         }
-
         private void BlueForm_Load(object sender, EventArgs e)
         {
             contextMenuStrip1 = new ContextMenuStrip();
@@ -72,7 +69,6 @@ namespace BLETest1
             listboxMessage.SelectionMode = System.Windows.Forms.SelectionMode.One;
             listboxMessage.ContextMenuStrip = contextMenuStrip1;
         }
-
         private void ListBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -120,7 +116,6 @@ namespace BLETest1
                 Clipboard.SetText(text);
             }
         }
-
         private void BlueForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Closing = true;

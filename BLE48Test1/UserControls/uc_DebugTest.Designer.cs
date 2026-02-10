@@ -30,10 +30,12 @@
         {
             this.tablePanel_Debug = new System.Windows.Forms.TableLayoutPanel();
             this.group_Head = new System.Windows.Forms.GroupBox();
+            this.btn_ReStartBL = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnClearLog = new System.Windows.Forms.Button();
             this.group_Select = new System.Windows.Forms.GroupBox();
             this.tablePanel_BL = new System.Windows.Forms.TableLayoutPanel();
+            this.label16 = new System.Windows.Forms.Label();
             this.cmb_NotifyFeatures = new System.Windows.Forms.ComboBox();
             this.btn_Features = new System.Windows.Forms.Button();
             this.cmb_WriteFeatures = new System.Windows.Forms.ComboBox();
@@ -64,6 +66,9 @@
             this.lab_PropertieNotify = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.num_minDb = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txt_filterName = new System.Windows.Forms.TextBox();
             this.listboxBleDevice = new System.Windows.Forms.ListBox();
             this.tablePanel_Debug.SuspendLayout();
             this.group_Head.SuspendLayout();
@@ -71,6 +76,7 @@
             this.tablePanel_BL.SuspendLayout();
             this.flowPanel_CRCBtns.SuspendLayout();
             this.flowPanel_Conn.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_minDb)).BeginInit();
             this.SuspendLayout();
             // 
             // tablePanel_Debug
@@ -94,6 +100,7 @@
             // 
             this.group_Head.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.group_Head.Controls.Add(this.btn_ReStartBL);
             this.group_Head.Controls.Add(this.btnSearch);
             this.group_Head.Controls.Add(this.btnClearLog);
             this.group_Head.Location = new System.Drawing.Point(3, 3);
@@ -102,6 +109,16 @@
             this.group_Head.TabIndex = 26;
             this.group_Head.TabStop = false;
             this.group_Head.Text = "扫描";
+            // 
+            // btn_ReStartBL
+            // 
+            this.btn_ReStartBL.Location = new System.Drawing.Point(239, 21);
+            this.btn_ReStartBL.Name = "btn_ReStartBL";
+            this.btn_ReStartBL.Size = new System.Drawing.Size(123, 26);
+            this.btn_ReStartBL.TabIndex = 13;
+            this.btn_ReStartBL.Text = "重新开启蓝牙";
+            this.btn_ReStartBL.UseVisualStyleBackColor = true;
+            this.btn_ReStartBL.Click += new System.EventHandler(this.btn_ReStartBL_Click);
             // 
             // btnSearch
             // 
@@ -143,35 +160,41 @@
             this.tablePanel_BL.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tablePanel_BL.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tablePanel_BL.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tablePanel_BL.Controls.Add(this.cmb_NotifyFeatures, 1, 4);
-            this.tablePanel_BL.Controls.Add(this.btn_Features, 0, 2);
-            this.tablePanel_BL.Controls.Add(this.cmb_WriteFeatures, 1, 2);
-            this.tablePanel_BL.Controls.Add(this.cmb_Server, 1, 1);
-            this.tablePanel_BL.Controls.Add(this.btn_WriteStr, 3, 7);
-            this.tablePanel_BL.Controls.Add(this.tbCode, 1, 7);
-            this.tablePanel_BL.Controls.Add(this.btn_WriteHex, 3, 8);
-            this.tablePanel_BL.Controls.Add(this.txt_ReadWriteInfo, 1, 8);
-            this.tablePanel_BL.Controls.Add(this.btn_Read, 3, 10);
-            this.tablePanel_BL.Controls.Add(this.txt_Read, 1, 10);
-            this.tablePanel_BL.Controls.Add(this.lab_Selected, 0, 0);
-            this.tablePanel_BL.Controls.Add(this.txt_SelectedBL, 1, 0);
-            this.tablePanel_BL.Controls.Add(this.btn_Serves, 0, 1);
-            this.tablePanel_BL.Controls.Add(this.flowPanel_CRCBtns, 1, 9);
-            this.tablePanel_BL.Controls.Add(this.label4, 3, 2);
-            this.tablePanel_BL.Controls.Add(this.label5, 3, 4);
-            this.tablePanel_BL.Controls.Add(this.label1, 0, 7);
-            this.tablePanel_BL.Controls.Add(this.label2, 0, 8);
-            this.tablePanel_BL.Controls.Add(this.label3, 0, 10);
-            this.tablePanel_BL.Controls.Add(this.flowPanel_Conn, 1, 6);
-            this.tablePanel_BL.Controls.Add(this.lab_PropertieWrite, 1, 3);
-            this.tablePanel_BL.Controls.Add(this.lab_PropertieNotify, 1, 5);
-            this.tablePanel_BL.Controls.Add(this.label6, 3, 3);
-            this.tablePanel_BL.Controls.Add(this.label7, 3, 5);
+            this.tablePanel_BL.Controls.Add(this.label16, 0, 0);
+            this.tablePanel_BL.Controls.Add(this.cmb_NotifyFeatures, 1, 6);
+            this.tablePanel_BL.Controls.Add(this.btn_Features, 0, 4);
+            this.tablePanel_BL.Controls.Add(this.cmb_WriteFeatures, 1, 4);
+            this.tablePanel_BL.Controls.Add(this.cmb_Server, 1, 3);
+            this.tablePanel_BL.Controls.Add(this.btn_WriteStr, 3, 9);
+            this.tablePanel_BL.Controls.Add(this.tbCode, 1, 9);
+            this.tablePanel_BL.Controls.Add(this.btn_WriteHex, 3, 10);
+            this.tablePanel_BL.Controls.Add(this.txt_ReadWriteInfo, 1, 10);
+            this.tablePanel_BL.Controls.Add(this.btn_Read, 3, 12);
+            this.tablePanel_BL.Controls.Add(this.txt_Read, 1, 12);
+            this.tablePanel_BL.Controls.Add(this.lab_Selected, 0, 2);
+            this.tablePanel_BL.Controls.Add(this.txt_SelectedBL, 1, 2);
+            this.tablePanel_BL.Controls.Add(this.btn_Serves, 0, 3);
+            this.tablePanel_BL.Controls.Add(this.flowPanel_CRCBtns, 1, 11);
+            this.tablePanel_BL.Controls.Add(this.label4, 3, 4);
+            this.tablePanel_BL.Controls.Add(this.label5, 3, 6);
+            this.tablePanel_BL.Controls.Add(this.label1, 0, 9);
+            this.tablePanel_BL.Controls.Add(this.label2, 0, 10);
+            this.tablePanel_BL.Controls.Add(this.label3, 0, 12);
+            this.tablePanel_BL.Controls.Add(this.flowPanel_Conn, 1, 8);
+            this.tablePanel_BL.Controls.Add(this.lab_PropertieWrite, 1, 5);
+            this.tablePanel_BL.Controls.Add(this.lab_PropertieNotify, 1, 7);
+            this.tablePanel_BL.Controls.Add(this.label6, 3, 5);
+            this.tablePanel_BL.Controls.Add(this.label7, 3, 7);
+            this.tablePanel_BL.Controls.Add(this.num_minDb, 1, 0);
+            this.tablePanel_BL.Controls.Add(this.label14, 0, 1);
+            this.tablePanel_BL.Controls.Add(this.txt_filterName, 1, 1);
             this.tablePanel_BL.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tablePanel_BL.Location = new System.Drawing.Point(3, 21);
             this.tablePanel_BL.Margin = new System.Windows.Forms.Padding(1);
             this.tablePanel_BL.Name = "tablePanel_BL";
-            this.tablePanel_BL.RowCount = 12;
+            this.tablePanel_BL.RowCount = 14;
+            this.tablePanel_BL.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanel_BL.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePanel_BL.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePanel_BL.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePanel_BL.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -187,13 +210,24 @@
             this.tablePanel_BL.Size = new System.Drawing.Size(799, 406);
             this.tablePanel_BL.TabIndex = 28;
             // 
+            // label16
+            // 
+            this.label16.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(56, 8);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(107, 15);
+            this.label16.TabIndex = 22;
+            this.label16.Text = "信号过滤(dB):";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // cmb_NotifyFeatures
             // 
             this.tablePanel_BL.SetColumnSpan(this.cmb_NotifyFeatures, 2);
             this.cmb_NotifyFeatures.DisplayMember = "Uuid";
             this.cmb_NotifyFeatures.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cmb_NotifyFeatures.FormattingEnabled = true;
-            this.cmb_NotifyFeatures.Location = new System.Drawing.Point(170, 138);
+            this.cmb_NotifyFeatures.Location = new System.Drawing.Point(170, 200);
             this.cmb_NotifyFeatures.Margin = new System.Windows.Forms.Padding(4);
             this.cmb_NotifyFeatures.Name = "cmb_NotifyFeatures";
             this.cmb_NotifyFeatures.Size = new System.Drawing.Size(500, 23);
@@ -203,7 +237,7 @@
             // btn_Features
             // 
             this.btn_Features.Enabled = false;
-            this.btn_Features.Location = new System.Drawing.Point(4, 75);
+            this.btn_Features.Location = new System.Drawing.Point(4, 137);
             this.btn_Features.Margin = new System.Windows.Forms.Padding(4);
             this.btn_Features.Name = "btn_Features";
             this.btn_Features.Size = new System.Drawing.Size(158, 30);
@@ -219,7 +253,7 @@
             this.tablePanel_BL.SetColumnSpan(this.cmb_WriteFeatures, 2);
             this.cmb_WriteFeatures.DisplayMember = "Uuid";
             this.cmb_WriteFeatures.FormattingEnabled = true;
-            this.cmb_WriteFeatures.Location = new System.Drawing.Point(170, 75);
+            this.cmb_WriteFeatures.Location = new System.Drawing.Point(170, 137);
             this.cmb_WriteFeatures.Margin = new System.Windows.Forms.Padding(4);
             this.cmb_WriteFeatures.Name = "cmb_WriteFeatures";
             this.cmb_WriteFeatures.Size = new System.Drawing.Size(500, 23);
@@ -231,7 +265,7 @@
             this.tablePanel_BL.SetColumnSpan(this.cmb_Server, 2);
             this.cmb_Server.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cmb_Server.FormattingEnabled = true;
-            this.cmb_Server.Location = new System.Drawing.Point(170, 37);
+            this.cmb_Server.Location = new System.Drawing.Point(170, 99);
             this.cmb_Server.Margin = new System.Windows.Forms.Padding(4);
             this.cmb_Server.Name = "cmb_Server";
             this.cmb_Server.Size = new System.Drawing.Size(500, 23);
@@ -240,7 +274,7 @@
             // btn_WriteStr
             // 
             this.btn_WriteStr.Enabled = false;
-            this.btn_WriteStr.Location = new System.Drawing.Point(678, 235);
+            this.btn_WriteStr.Location = new System.Drawing.Point(678, 297);
             this.btn_WriteStr.Margin = new System.Windows.Forms.Padding(4);
             this.btn_WriteStr.Name = "btn_WriteStr";
             this.btn_WriteStr.Size = new System.Drawing.Size(117, 30);
@@ -253,7 +287,7 @@
             // 
             this.tablePanel_BL.SetColumnSpan(this.tbCode, 2);
             this.tbCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbCode.Location = new System.Drawing.Point(170, 235);
+            this.tbCode.Location = new System.Drawing.Point(170, 297);
             this.tbCode.Margin = new System.Windows.Forms.Padding(4);
             this.tbCode.Name = "tbCode";
             this.tbCode.Size = new System.Drawing.Size(500, 25);
@@ -263,7 +297,7 @@
             // btn_WriteHex
             // 
             this.btn_WriteHex.Enabled = false;
-            this.btn_WriteHex.Location = new System.Drawing.Point(678, 273);
+            this.btn_WriteHex.Location = new System.Drawing.Point(678, 335);
             this.btn_WriteHex.Margin = new System.Windows.Forms.Padding(4);
             this.btn_WriteHex.Name = "btn_WriteHex";
             this.btn_WriteHex.Size = new System.Drawing.Size(117, 30);
@@ -276,7 +310,7 @@
             // 
             this.tablePanel_BL.SetColumnSpan(this.txt_ReadWriteInfo, 2);
             this.txt_ReadWriteInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txt_ReadWriteInfo.Location = new System.Drawing.Point(170, 273);
+            this.txt_ReadWriteInfo.Location = new System.Drawing.Point(170, 335);
             this.txt_ReadWriteInfo.Margin = new System.Windows.Forms.Padding(4);
             this.txt_ReadWriteInfo.Name = "txt_ReadWriteInfo";
             this.txt_ReadWriteInfo.Size = new System.Drawing.Size(500, 25);
@@ -286,7 +320,7 @@
             // btn_Read
             // 
             this.btn_Read.Enabled = false;
-            this.btn_Read.Location = new System.Drawing.Point(678, 352);
+            this.btn_Read.Location = new System.Drawing.Point(678, 414);
             this.btn_Read.Margin = new System.Windows.Forms.Padding(4);
             this.btn_Read.Name = "btn_Read";
             this.btn_Read.Size = new System.Drawing.Size(117, 30);
@@ -299,7 +333,7 @@
             // 
             this.tablePanel_BL.SetColumnSpan(this.txt_Read, 2);
             this.txt_Read.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txt_Read.Location = new System.Drawing.Point(170, 352);
+            this.txt_Read.Location = new System.Drawing.Point(170, 414);
             this.txt_Read.Margin = new System.Windows.Forms.Padding(4);
             this.txt_Read.Name = "txt_Read";
             this.txt_Read.ReadOnly = true;
@@ -310,7 +344,7 @@
             // 
             this.lab_Selected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.lab_Selected.AutoSize = true;
-            this.lab_Selected.Location = new System.Drawing.Point(4, 9);
+            this.lab_Selected.Location = new System.Drawing.Point(4, 71);
             this.lab_Selected.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lab_Selected.Name = "lab_Selected";
             this.lab_Selected.Size = new System.Drawing.Size(158, 15);
@@ -321,7 +355,7 @@
             // txt_SelectedBL
             // 
             this.tablePanel_BL.SetColumnSpan(this.txt_SelectedBL, 3);
-            this.txt_SelectedBL.Location = new System.Drawing.Point(170, 4);
+            this.txt_SelectedBL.Location = new System.Drawing.Point(170, 66);
             this.txt_SelectedBL.Margin = new System.Windows.Forms.Padding(4);
             this.txt_SelectedBL.Name = "txt_SelectedBL";
             this.txt_SelectedBL.ReadOnly = true;
@@ -331,7 +365,7 @@
             // btn_Serves
             // 
             this.btn_Serves.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn_Serves.Location = new System.Drawing.Point(4, 37);
+            this.btn_Serves.Location = new System.Drawing.Point(4, 99);
             this.btn_Serves.Margin = new System.Windows.Forms.Padding(4);
             this.btn_Serves.Name = "btn_Serves";
             this.btn_Serves.Size = new System.Drawing.Size(158, 30);
@@ -347,7 +381,7 @@
             this.flowPanel_CRCBtns.Controls.Add(this.btn_CRC16HL);
             this.flowPanel_CRCBtns.Controls.Add(this.btn_Sleep);
             this.flowPanel_CRCBtns.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowPanel_CRCBtns.Location = new System.Drawing.Point(169, 310);
+            this.flowPanel_CRCBtns.Location = new System.Drawing.Point(169, 372);
             this.flowPanel_CRCBtns.Name = "flowPanel_CRCBtns";
             this.flowPanel_CRCBtns.Size = new System.Drawing.Size(627, 35);
             this.flowPanel_CRCBtns.TabIndex = 28;
@@ -389,7 +423,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(678, 82);
+            this.label4.Location = new System.Drawing.Point(678, 144);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(117, 15);
@@ -401,7 +435,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(678, 142);
+            this.label5.Location = new System.Drawing.Point(678, 204);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(117, 15);
@@ -413,7 +447,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 242);
+            this.label1.Location = new System.Drawing.Point(4, 304);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(158, 15);
@@ -425,7 +459,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 280);
+            this.label2.Location = new System.Drawing.Point(4, 342);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(158, 15);
@@ -437,7 +471,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 359);
+            this.label3.Location = new System.Drawing.Point(4, 421);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(158, 15);
@@ -452,7 +486,7 @@
             this.flowPanel_Conn.Controls.Add(this.btn_OptAndConn);
             this.flowPanel_Conn.Controls.Add(this.btn_DisConn);
             this.flowPanel_Conn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowPanel_Conn.Location = new System.Drawing.Point(169, 193);
+            this.flowPanel_Conn.Location = new System.Drawing.Point(169, 255);
             this.flowPanel_Conn.Name = "flowPanel_Conn";
             this.flowPanel_Conn.Size = new System.Drawing.Size(627, 35);
             this.flowPanel_Conn.TabIndex = 29;
@@ -497,7 +531,7 @@
             this.lab_PropertieWrite.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tablePanel_BL.SetColumnSpan(this.lab_PropertieWrite, 2);
             this.lab_PropertieWrite.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lab_PropertieWrite.Location = new System.Drawing.Point(169, 109);
+            this.lab_PropertieWrite.Location = new System.Drawing.Point(169, 171);
             this.lab_PropertieWrite.Name = "lab_PropertieWrite";
             this.lab_PropertieWrite.Size = new System.Drawing.Size(502, 25);
             this.lab_PropertieWrite.TabIndex = 30;
@@ -509,7 +543,7 @@
             this.lab_PropertieNotify.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tablePanel_BL.SetColumnSpan(this.lab_PropertieNotify, 2);
             this.lab_PropertieNotify.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lab_PropertieNotify.Location = new System.Drawing.Point(169, 165);
+            this.lab_PropertieNotify.Location = new System.Drawing.Point(169, 227);
             this.lab_PropertieNotify.Name = "lab_PropertieNotify";
             this.lab_PropertieNotify.Size = new System.Drawing.Size(502, 25);
             this.lab_PropertieNotify.TabIndex = 31;
@@ -519,7 +553,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(678, 114);
+            this.label6.Location = new System.Drawing.Point(678, 176);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(117, 15);
@@ -531,13 +565,61 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(678, 170);
+            this.label7.Location = new System.Drawing.Point(678, 232);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(117, 15);
             this.label7.TabIndex = 33;
             this.label7.Text = "属性";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // num_minDb
+            // 
+            this.num_minDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.num_minDb.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.num_minDb.Location = new System.Drawing.Point(169, 3);
+            this.num_minDb.Maximum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.num_minDb.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.num_minDb.Name = "num_minDb";
+            this.num_minDb.Size = new System.Drawing.Size(506, 25);
+            this.num_minDb.TabIndex = 23;
+            this.num_minDb.Value = new decimal(new int[] {
+            70,
+            0,
+            0,
+            -2147483648});
+            // 
+            // label14
+            // 
+            this.label14.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(58, 39);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(105, 15);
+            this.label14.TabIndex = 34;
+            this.label14.Text = "蓝牙过滤名称:";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txt_filterName
+            // 
+            this.txt_filterName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt_filterName.Location = new System.Drawing.Point(169, 34);
+            this.txt_filterName.Name = "txt_filterName";
+            this.txt_filterName.Size = new System.Drawing.Size(506, 25);
+            this.txt_filterName.TabIndex = 35;
+            this.txt_filterName.TextChanged += new System.EventHandler(this.txt_filterName_TextChanged);
             // 
             // listboxBleDevice
             // 
@@ -565,6 +647,7 @@
             this.tablePanel_BL.PerformLayout();
             this.flowPanel_CRCBtns.ResumeLayout(false);
             this.flowPanel_Conn.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.num_minDb)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -608,5 +691,10 @@
         private System.Windows.Forms.Label lab_PropertieNotify;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.NumericUpDown num_minDb;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox txt_filterName;
+        private System.Windows.Forms.Button btn_ReStartBL;
     }
 }

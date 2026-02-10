@@ -135,6 +135,37 @@ namespace BLETest1.ViewModel
             DataRecvEvent?.Invoke(this, ConnectedDevice.dev, data.ToList());
         }
 
+
+        /// <summary>
+        /// 关闭服务的所有特征
+        /// </summary>
+        private async Task CloseServiceCharacteristics(GattDeviceService service)
+        {
+            if (service == null) return;
+
+            try
+            {
+                var characteristicsResult = await service.GetCharacteristicsAsync();
+
+                if (characteristicsResult.Status == GattCommunicationStatus.Success)
+                {
+                    foreach (var characteristic in characteristicsResult.Characteristics)
+                    {
+                        // 如果是通知特征，先禁用通知
+                        if (characteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                        {
+                            await characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
+                        }
+                        characteristic.Service?.Dispose();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"关闭特征时出错: {ex.Message}");
+            }
+        }
+
         public bool DisConnectDevice(ConnectedDeviceParam param)
         {
             try
@@ -145,13 +176,21 @@ namespace BLETest1.ViewModel
                 {
                     foreach (var sev in dev.ServiceList)
                     {
+                        CloseServiceCharacteristics(sev).Wait();
+                        sev.Session?.Dispose();
                         sev.Dispose();
                     }
+                }
+
+                if (param.dev?.BLE != null)
+                {
+                    param.dev.BLE.ConnectionStatusChanged -= BLE_ConnectionStatusChanged;
                 }
 
                 if (ConnectedDevice != null)
                 {
                     //关闭该蓝牙的所有服务
+                    ConnectedDevice.service?.Session?.Dispose();
                     ConnectedDevice.service?.Dispose();
                     ConnectedDevice.dev?.BLE?.Dispose();
                     ConnectedDevice.write = null;
@@ -159,7 +198,9 @@ namespace BLETest1.ViewModel
                     ConnectedDevice.service = null;
                     ConnectedDevice.dev = null;
                 }
+                param.service?.Session?.Dispose();
                 param.service?.Dispose();
+
                 param.dev?.BLE.Dispose();
                 if (param.dev != null)
                     param.dev.BLE = null;
@@ -173,6 +214,12 @@ namespace BLETest1.ViewModel
             }
             catch (Exception ex)
             {
+                if (param.dev != null)
+                {
+                    // 强制释放
+                    param.dev.BLE?.Dispose();
+                    param.dev.BLE = null;
+                }
             }
             IsConnect = false;
             return IsConnect;
@@ -199,6 +246,7 @@ namespace BLETest1.ViewModel
 
         private void FindCharacteristic(MyBluetoothLEDeviceEx dev, GattDeviceService service)
         {
+            if (service == null) return;
             /* this.CurrentService = gattDeviceService;
              foreach(var c in gattDeviceService.GetAllCharacteristics())
              {
@@ -297,7 +345,7 @@ namespace BLETest1.ViewModel
             // only activate the watcher when we're recieving values >= -80
             watcher.SignalStrengthFilter.InRangeThresholdInDBm = minDb;
             // stop watching if the value drops below -90 (user walked away)
-            watcher.SignalStrengthFilter.OutOfRangeThresholdInDBm = (short)(minDb - 10);
+            watcher.SignalStrengthFilter.OutOfRangeThresholdInDBm = (short)(minDb - 20);
             // register callback for when we see an advertisements
             watcher.Received += OnAdvertisementReceived;
             watcher.Stopped += Watcher_Stopped;
@@ -346,10 +394,13 @@ namespace BLETest1.ViewModel
                             for (int i = 0; i < c; i++) //过滤重复的设备
                             {
                                 MyBluetoothLEDeviceEx device = DeviceList[i];
-                                if (device.BLE.DeviceId == currentDevice.DeviceId)
+                                if (device.BLE != null)
                                 {
-                                    contain = true;
-                                    curEx = device;
+                                    if (device.BLE.DeviceId == currentDevice.DeviceId)
+                                    {
+                                        contain = true;
+                                        curEx = device;
+                                    }
                                 }
                             }
 

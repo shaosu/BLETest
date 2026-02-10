@@ -51,7 +51,7 @@ namespace BLETest1.DataTypes
 
     public class SleepTestParam
     {
-        public static double MaxSleepCurrent_mA { get; set; } = 1;
+        public static double MaxSleepCurrent_mA { get; set; } = 5;
         /// <summary>
         /// 工作电流:0.1mA,需要转换为mA单位
         /// 休眠电流:0.1uA ,需要转换为mA单位

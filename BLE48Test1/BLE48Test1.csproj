@@ -9,6 +9,8 @@
     <RootNamespace>BLETest1</RootNamespace>
     <AssemblyName>BLETest1</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -33,6 +35,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -84,6 +89,7 @@
     <Compile Include="UserControls\UserControlBase.cs" />
     <Compile Include="ViewModel\BleCore.cs" />
     <Compile Include="ViewModel\BleCore2.cs" />
+    <Compile Include="ViewModel\BluetoothController.cs" />
     <Compile Include="ViewModel\IBLConnTagParam.cs" />
     <Compile Include="ViewModel\MyBluetoothLEDeviceEx.cs" />
     <Compile Include="ViewModel\StartParam.cs" />
@@ -109,6 +115,7 @@
     <EmbeddedResource Include="UserControls\uc_SleepLoopTest.resx">
       <DependentUpon>uc_SleepLoopTest.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -128,6 +135,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.WindowsRuntime">
+      <Version>4.7.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

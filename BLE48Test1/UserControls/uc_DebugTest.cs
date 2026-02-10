@@ -3,14 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
+using Windows.Devices.Radios;
 using Windows.Storage.Streams;
+using System.Management;
 
 namespace BLETest1.UserControls
 {
@@ -83,7 +87,7 @@ namespace BLETest1.UserControls
                     GattCharacteristics.Clear();
                     this.listboxMessage.Items.Clear();
                     this.listboxBleDevice.Items.Clear();
-                    this.bleCore.StartBleDevicewatcher();
+                    this.bleCore.StartBleDevicewatcher((short)num_minDb.Value);
                     this.btnSearch.Text = "停止";
                 }
                 else
@@ -554,8 +558,186 @@ namespace BLETest1.UserControls
             catch (Exception ex)
             {
 
-
             }
         }
+
+        private void txt_filterName_TextChanged(object sender, EventArgs e)
+        {
+            if (bleCore != null)
+            {
+                bleCore.FilterName = txt_filterName.Text;
+            }
+        }
+
+        private void btn_ReStartBL_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ToggleBluetoothRadio(false);
+                System.Threading.Thread.Sleep(3000);
+                ToggleBluetoothRadio(true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"打开蓝牙设置失败: {ex.Message}");
+            }
+        }
+
+        [DllImport("setupapi.dll", CharSet = CharSet.Auto)]
+        private static extern int SetupDiCallClassInstaller(uint InstallFunction, IntPtr DeviceInfoSet, ref SP_DEVINFO_DATA DeviceInfoData);
+
+        [DllImport("setupapi.dll", CharSet = CharSet.Auto)]
+        private static extern bool SetupDiDestroyDeviceInfoList(IntPtr DeviceInfoSet);
+
+        [DllImport("setupapi.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SetupDiGetClassDevs(ref Guid ClassGuid, string Enumerator, IntPtr hwndParent, uint Flags);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SP_DEVINFO_DATA
+        {
+            public int cbSize;
+            public Guid ClassGuid;
+            public uint DevInst;
+            public IntPtr Reserved;
+        }
+
+        private const uint DIF_PROPERTYCHANGE = 0x12;
+        private const uint DIGCF_PRESENT = 0x2;
+        private const uint DIGCF_DEVICEINTERFACE = 0x10;
+        private const uint DIGCF_ALLCLASSES = 0x4;
+
+        // 直接控制蓝牙无线电开关
+        public static void ToggleBluetoothRadio(bool enable, bool showMsg = false)
+        {
+            try
+            {
+                // 使用 PowerShell 命令控制蓝牙
+                string script = enable
+                    ? @"Add-Type -AssemblyName System.Runtime.WindowsRuntime
+                        $asTaskGeneric = ([System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object { $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1' })[0]
+                        Function Await($WinRtTask, $ResultType) {
+                            $asTask = $asTaskGeneric.MakeGenericMethod($ResultType)
+                            $netTask = $asTask.Invoke($null, @($WinRtTask))
+                            $netTask.Wait(-1) | Out-Null
+                            $netTask.Result
+                        }
+                        [Windows.Devices.Radios.Radio,Windows.System.Devices,ContentType=WindowsRuntime] | Out-Null
+                        [Windows.Devices.Radios.RadioState,Windows.System.Devices,ContentType=WindowsRuntime] | Out-Null
+                        $radios = Await ([Windows.Devices.Radios.Radio]::RequestAccessAsync()) ([Windows.Devices.Radios.RadioAccessStatus])
+                        $radios = Await ([Windows.Devices.Radios.Radio]::GetRadiosAsync()) ([System.Collections.Generic.IReadOnlyList[Windows.Devices.Radios.Radio]])
+                        $bluetooth = $radios | Where-Object { $_.Kind -eq 'Bluetooth' }
+                        if ($bluetooth) { Await ($bluetooth.SetStateAsync('On')) ([Windows.Devices.Radios.RadioAccessStatus]) }"
+                    : @"Add-Type -AssemblyName System.Runtime.WindowsRuntime
+                        $asTaskGeneric = ([System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object { $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1' })[0]
+                        Function Await($WinRtTask, $ResultType) {
+                            $asTask = $asTaskGeneric.MakeGenericMethod($ResultType)
+                            $netTask = $asTask.Invoke($null, @($WinRtTask))
+                            $netTask.Wait(-1) | Out-Null
+                            $netTask.Result
+                        }
+                        [Windows.Devices.Radios.Radio,Windows.System.Devices,ContentType=WindowsRuntime] | Out-Null
+                        [Windows.Devices.Radios.RadioState,Windows.System.Devices,ContentType=WindowsRuntime] | Out-Null
+                        $radios = Await ([Windows.Devices.Radios.Radio]::RequestAccessAsync()) ([Windows.Devices.Radios.RadioAccessStatus])
+                        $radios = Await ([Windows.Devices.Radios.Radio]::GetRadiosAsync()) ([System.Collections.Generic.IReadOnlyList[Windows.Devices.Radios.Radio]])
+                        $bluetooth = $radios | Where-Object { $_.Kind -eq 'Bluetooth' }
+                        if ($bluetooth) { Await ($bluetooth.SetStateAsync('Off')) ([Windows.Devices.Radios.RadioAccessStatus]) }";
+
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script.Replace("\"", "\\\"")}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+
+                using (var process = Process.Start(psi))
+                {
+                    process.WaitForExit(10000);
+                    string error = process.StandardError.ReadToEnd();
+
+                    if (process.ExitCode == 0 && string.IsNullOrEmpty(error))
+                    {
+                        if (showMsg)
+                            MessageBox.Show(enable ? "蓝牙已打开" : "蓝牙已关闭", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        if (showMsg)
+                            MessageBox.Show($"操作可能未成功: {error}", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (showMsg)
+                    MessageBox.Show($"操作失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        // 获取蓝牙状态
+        public static bool GetBluetoothStatus()
+        {
+            try
+            {
+                string script = @"
+                $adapter = Get-PnpDevice -Class Bluetooth | Where-Object {$_.Status -eq 'OK'}
+                if ($adapter) {
+                    $true
+                } else {
+                    $false
+                }";
+
+                string result = RunPowerShellScript(script);
+                return result.Trim() == "True";
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // 切换蓝牙开关
+        public static bool ToggleBluetooth(bool enable)
+        {
+            try
+            {
+                string action = enable ? "Enable" : "Disable";
+                string script = $@"
+$adapters = Get-PnpDevice -Class Bluetooth
+foreach ($adapter in $adapters) {{
+    {action}-PnpDevice -InstanceId $adapter.InstanceId -Confirm:$false
+}}
+return '{action} Completed'";
+
+                string result = RunPowerShellScript(script);
+                return result.Contains("Completed");
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static string RunPowerShellScript(string script)
+        {
+            return string.Empty;
+            //using (PowerShell ps = PowerShell.Create())
+            //{
+            //    ps.AddScript(script);
+            //    var results = ps.Invoke();
+            //    StringBuilder sb = new StringBuilder();
+
+            //    foreach (var result in results)
+            //    {
+            //        sb.AppendLine(result.ToString());
+            //    }
+
+            //    return sb.ToString();
+            //}
+        }
+
     }
 }

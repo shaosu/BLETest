@@ -55,11 +55,9 @@
             this.com_BLList = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
             this.num_minDb = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
             this.com_LoopMode = new System.Windows.Forms.ComboBox();
-            this.txt_TJ = new System.Windows.Forms.TextBox();
-            this.btn_FlashTJ = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btn_Scan = new System.Windows.Forms.Button();
             this.btn_ClearTJ = new System.Windows.Forms.Button();
             this.btn_Test = new System.Windows.Forms.Button();
             this.btnClearLog2 = new System.Windows.Forms.Button();
@@ -67,11 +65,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.num_ReadCount = new System.Windows.Forms.NumericUpDown();
             this.num_ReadDelay = new System.Windows.Forms.NumericUpDown();
+            this.nmu_AutoRestartCount = new System.Windows.Forms.NumericUpDown();
+            this.txt_TJ = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.btn_FlashTJ = new System.Windows.Forms.Button();
             this.tablePanel_DLLDebugParam.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_minDb)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_ReadCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_ReadDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmu_AutoRestartCount)).BeginInit();
             this.SuspendLayout();
             // 
             // chk_DLLDebugLoop
@@ -116,20 +121,23 @@
             this.tablePanel_DLLDebugParam.Controls.Add(this.com_BLList, 1, 5);
             this.tablePanel_DLLDebugParam.Controls.Add(this.label17, 2, 7);
             this.tablePanel_DLLDebugParam.Controls.Add(this.num_minDb, 1, 7);
-            this.tablePanel_DLLDebugParam.Controls.Add(this.label5, 0, 11);
             this.tablePanel_DLLDebugParam.Controls.Add(this.com_LoopMode, 1, 10);
-            this.tablePanel_DLLDebugParam.Controls.Add(this.txt_TJ, 1, 11);
-            this.tablePanel_DLLDebugParam.Controls.Add(this.btn_FlashTJ, 2, 11);
             this.tablePanel_DLLDebugParam.Controls.Add(this.panel1, 0, 0);
             this.tablePanel_DLLDebugParam.Controls.Add(this.label1, 0, 8);
             this.tablePanel_DLLDebugParam.Controls.Add(this.label2, 0, 9);
             this.tablePanel_DLLDebugParam.Controls.Add(this.num_ReadCount, 1, 8);
             this.tablePanel_DLLDebugParam.Controls.Add(this.num_ReadDelay, 1, 9);
+            this.tablePanel_DLLDebugParam.Controls.Add(this.nmu_AutoRestartCount, 1, 11);
+            this.tablePanel_DLLDebugParam.Controls.Add(this.txt_TJ, 1, 12);
+            this.tablePanel_DLLDebugParam.Controls.Add(this.label23, 0, 11);
+            this.tablePanel_DLLDebugParam.Controls.Add(this.label5, 0, 12);
+            this.tablePanel_DLLDebugParam.Controls.Add(this.label24, 2, 11);
+            this.tablePanel_DLLDebugParam.Controls.Add(this.btn_FlashTJ, 2, 12);
             this.tablePanel_DLLDebugParam.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tablePanel_DLLDebugParam.Location = new System.Drawing.Point(0, 0);
             this.tablePanel_DLLDebugParam.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
             this.tablePanel_DLLDebugParam.Name = "tablePanel_DLLDebugParam";
-            this.tablePanel_DLLDebugParam.RowCount = 14;
+            this.tablePanel_DLLDebugParam.RowCount = 15;
             this.tablePanel_DLLDebugParam.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tablePanel_DLLDebugParam.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tablePanel_DLLDebugParam.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
@@ -143,8 +151,8 @@
             this.tablePanel_DLLDebugParam.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePanel_DLLDebugParam.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePanel_DLLDebugParam.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanel_DLLDebugParam.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePanel_DLLDebugParam.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tablePanel_DLLDebugParam.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tablePanel_DLLDebugParam.Size = new System.Drawing.Size(649, 840);
             this.tablePanel_DLLDebugParam.TabIndex = 19;
             // 
@@ -152,7 +160,7 @@
             // 
             this.label18.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(50, 331);
+            this.label18.Location = new System.Drawing.Point(78, 331);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(75, 15);
             this.label18.TabIndex = 40;
@@ -196,7 +204,7 @@
             // 
             this.label16.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(18, 239);
+            this.label16.Location = new System.Drawing.Point(46, 239);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(107, 15);
             this.label16.TabIndex = 19;
@@ -217,17 +225,17 @@
             // txt_filterName
             // 
             this.txt_filterName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_filterName.Location = new System.Drawing.Point(131, 203);
+            this.txt_filterName.Location = new System.Drawing.Point(159, 203);
             this.txt_filterName.Name = "txt_filterName";
-            this.txt_filterName.Size = new System.Drawing.Size(397, 25);
+            this.txt_filterName.Size = new System.Drawing.Size(369, 25);
             this.txt_filterName.TabIndex = 17;
-            this.txt_filterName.Text = "ESP";
+            this.txt_filterName.Text = "BMS";
             // 
             // label14
             // 
             this.label14.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(20, 208);
+            this.label14.Location = new System.Drawing.Point(48, 208);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(105, 15);
             this.label14.TabIndex = 16;
@@ -249,7 +257,7 @@
             // 
             this.label12.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(50, 177);
+            this.label12.Location = new System.Drawing.Point(78, 177);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(75, 15);
             this.label12.TabIndex = 13;
@@ -270,16 +278,16 @@
             // txt_tagNotifyChar
             // 
             this.txt_tagNotifyChar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_tagNotifyChar.Location = new System.Drawing.Point(131, 143);
+            this.txt_tagNotifyChar.Location = new System.Drawing.Point(159, 143);
             this.txt_tagNotifyChar.Name = "txt_tagNotifyChar";
-            this.txt_tagNotifyChar.Size = new System.Drawing.Size(397, 25);
+            this.txt_tagNotifyChar.Size = new System.Drawing.Size(369, 25);
             this.txt_tagNotifyChar.TabIndex = 10;
             // 
             // label10
             // 
             this.label10.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(18, 147);
+            this.label10.Location = new System.Drawing.Point(46, 147);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(107, 15);
             this.label10.TabIndex = 9;
@@ -300,16 +308,16 @@
             // txt_tagWriteChar
             // 
             this.txt_tagWriteChar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_tagWriteChar.Location = new System.Drawing.Point(131, 113);
+            this.txt_tagWriteChar.Location = new System.Drawing.Point(159, 113);
             this.txt_tagWriteChar.Name = "txt_tagWriteChar";
-            this.txt_tagWriteChar.Size = new System.Drawing.Size(397, 25);
+            this.txt_tagWriteChar.Size = new System.Drawing.Size(369, 25);
             this.txt_tagWriteChar.TabIndex = 7;
             // 
             // label8
             // 
             this.label8.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(33, 117);
+            this.label8.Location = new System.Drawing.Point(61, 117);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(92, 15);
             this.label8.TabIndex = 6;
@@ -330,16 +338,16 @@
             // txt_tagService
             // 
             this.txt_tagService.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_tagService.Location = new System.Drawing.Point(131, 83);
+            this.txt_tagService.Location = new System.Drawing.Point(159, 83);
             this.txt_tagService.Name = "txt_tagService";
-            this.txt_tagService.Size = new System.Drawing.Size(397, 25);
+            this.txt_tagService.Size = new System.Drawing.Size(369, 25);
             this.txt_tagService.TabIndex = 4;
             // 
             // label6
             // 
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(48, 87);
+            this.label6.Location = new System.Drawing.Point(76, 87);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(77, 15);
             this.label6.TabIndex = 3;
@@ -350,7 +358,7 @@
             // 
             this.lab_TitleMAC.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lab_TitleMAC.AutoSize = true;
-            this.lab_TitleMAC.Location = new System.Drawing.Point(86, 57);
+            this.lab_TitleMAC.Location = new System.Drawing.Point(114, 57);
             this.lab_TitleMAC.Name = "lab_TitleMAC";
             this.lab_TitleMAC.Size = new System.Drawing.Size(39, 15);
             this.lab_TitleMAC.TabIndex = 0;
@@ -360,9 +368,9 @@
             // txt_MAC
             // 
             this.txt_MAC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_MAC.Location = new System.Drawing.Point(131, 53);
+            this.txt_MAC.Location = new System.Drawing.Point(159, 53);
             this.txt_MAC.Name = "txt_MAC";
-            this.txt_MAC.Size = new System.Drawing.Size(397, 25);
+            this.txt_MAC.Size = new System.Drawing.Size(369, 25);
             this.txt_MAC.TabIndex = 1;
             this.txt_MAC.Text = "30:83:98:FC:B4:3E";
             // 
@@ -386,9 +394,9 @@
             this.com_BLList.Items.AddRange(new object[] {
             "ESP32",
             "国民蓝牙/巨微蓝牙"});
-            this.com_BLList.Location = new System.Drawing.Point(131, 173);
+            this.com_BLList.Location = new System.Drawing.Point(159, 173);
             this.com_BLList.Name = "com_BLList";
-            this.com_BLList.Size = new System.Drawing.Size(397, 23);
+            this.com_BLList.Size = new System.Drawing.Size(369, 23);
             this.com_BLList.TabIndex = 15;
             this.com_BLList.SelectedIndexChanged += new System.EventHandler(this.com_BLList_SelectedIndexChanged);
             // 
@@ -411,7 +419,7 @@
             0,
             0,
             0});
-            this.num_minDb.Location = new System.Drawing.Point(131, 234);
+            this.num_minDb.Location = new System.Drawing.Point(159, 234);
             this.num_minDb.Maximum = new decimal(new int[] {
             0,
             0,
@@ -423,24 +431,14 @@
             0,
             -2147483648});
             this.num_minDb.Name = "num_minDb";
-            this.num_minDb.Size = new System.Drawing.Size(397, 25);
+            this.num_minDb.Size = new System.Drawing.Size(369, 25);
             this.num_minDb.TabIndex = 21;
             this.num_minDb.Value = new decimal(new int[] {
-            50,
+            70,
             0,
             0,
             -2147483648});
-            // 
-            // label5
-            // 
-            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(80, 390);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(45, 15);
-            this.label5.TabIndex = 30;
-            this.label5.Text = "统计:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.num_minDb.ValueChanged += new System.EventHandler(this.num_minDb_ValueChanged);
             // 
             // com_LoopMode
             // 
@@ -451,36 +449,16 @@
             this.com_LoopMode.Items.AddRange(new object[] {
             "读数据",
             "连接-断开"});
-            this.com_LoopMode.Location = new System.Drawing.Point(131, 327);
+            this.com_LoopMode.Location = new System.Drawing.Point(159, 327);
             this.com_LoopMode.Name = "com_LoopMode";
-            this.com_LoopMode.Size = new System.Drawing.Size(397, 23);
+            this.com_LoopMode.Size = new System.Drawing.Size(369, 23);
             this.com_LoopMode.TabIndex = 33;
             this.com_LoopMode.SelectedIndexChanged += new System.EventHandler(this.com_LoopMode_SelectedIndexChanged);
-            // 
-            // txt_TJ
-            // 
-            this.txt_TJ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_TJ.Location = new System.Drawing.Point(131, 356);
-            this.txt_TJ.Multiline = true;
-            this.txt_TJ.Name = "txt_TJ";
-            this.txt_TJ.ReadOnly = true;
-            this.txt_TJ.Size = new System.Drawing.Size(397, 84);
-            this.txt_TJ.TabIndex = 31;
-            // 
-            // btn_FlashTJ
-            // 
-            this.btn_FlashTJ.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btn_FlashTJ.Location = new System.Drawing.Point(534, 384);
-            this.btn_FlashTJ.Name = "btn_FlashTJ";
-            this.btn_FlashTJ.Size = new System.Drawing.Size(67, 27);
-            this.btn_FlashTJ.TabIndex = 29;
-            this.btn_FlashTJ.Text = "刷新";
-            this.btn_FlashTJ.UseVisualStyleBackColor = true;
-            this.btn_FlashTJ.Click += new System.EventHandler(this.btn_FlashTJ_Click);
             // 
             // panel1
             // 
             this.tablePanel_DLLDebugParam.SetColumnSpan(this.panel1, 3);
+            this.panel1.Controls.Add(this.btn_Scan);
             this.panel1.Controls.Add(this.btn_ClearTJ);
             this.panel1.Controls.Add(this.btn_Test);
             this.panel1.Controls.Add(this.chk_DLLDebugLoop);
@@ -490,6 +468,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(643, 44);
             this.panel1.TabIndex = 35;
+            // 
+            // btn_Scan
+            // 
+            this.btn_Scan.Location = new System.Drawing.Point(398, 4);
+            this.btn_Scan.Margin = new System.Windows.Forms.Padding(4);
+            this.btn_Scan.Name = "btn_Scan";
+            this.btn_Scan.Size = new System.Drawing.Size(100, 35);
+            this.btn_Scan.TabIndex = 22;
+            this.btn_Scan.Text = "扫描";
+            this.btn_Scan.UseVisualStyleBackColor = true;
+            this.btn_Scan.Click += new System.EventHandler(this.btn_Scan_Click);
             // 
             // btn_ClearTJ
             // 
@@ -528,7 +517,7 @@
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(35, 270);
+            this.label1.Location = new System.Drawing.Point(63, 270);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(90, 15);
             this.label1.TabIndex = 36;
@@ -539,7 +528,7 @@
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 301);
+            this.label2.Location = new System.Drawing.Point(31, 301);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(122, 15);
             this.label2.TabIndex = 37;
@@ -549,7 +538,7 @@
             // num_ReadCount
             // 
             this.num_ReadCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.num_ReadCount.Location = new System.Drawing.Point(131, 265);
+            this.num_ReadCount.Location = new System.Drawing.Point(159, 265);
             this.num_ReadCount.Maximum = new decimal(new int[] {
             50,
             0,
@@ -561,7 +550,7 @@
             0,
             0});
             this.num_ReadCount.Name = "num_ReadCount";
-            this.num_ReadCount.Size = new System.Drawing.Size(397, 25);
+            this.num_ReadCount.Size = new System.Drawing.Size(369, 25);
             this.num_ReadCount.TabIndex = 39;
             this.num_ReadCount.Value = new decimal(new int[] {
             2,
@@ -578,7 +567,7 @@
             0,
             0,
             0});
-            this.num_ReadDelay.Location = new System.Drawing.Point(131, 296);
+            this.num_ReadDelay.Location = new System.Drawing.Point(159, 296);
             this.num_ReadDelay.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -590,7 +579,7 @@
             0,
             0});
             this.num_ReadDelay.Name = "num_ReadDelay";
-            this.num_ReadDelay.Size = new System.Drawing.Size(397, 25);
+            this.num_ReadDelay.Size = new System.Drawing.Size(369, 25);
             this.num_ReadDelay.TabIndex = 38;
             this.num_ReadDelay.Value = new decimal(new int[] {
             500,
@@ -598,6 +587,79 @@
             0,
             0});
             this.num_ReadDelay.ValueChanged += new System.EventHandler(this.num_ReadDelay_ValueChanged);
+            // 
+            // nmu_AutoRestartCount
+            // 
+            this.nmu_AutoRestartCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.nmu_AutoRestartCount.Location = new System.Drawing.Point(159, 356);
+            this.nmu_AutoRestartCount.Minimum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.nmu_AutoRestartCount.Name = "nmu_AutoRestartCount";
+            this.nmu_AutoRestartCount.Size = new System.Drawing.Size(369, 25);
+            this.nmu_AutoRestartCount.TabIndex = 50;
+            this.nmu_AutoRestartCount.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.nmu_AutoRestartCount.ValueChanged += new System.EventHandler(this.nmu_AutoRestartCount_ValueChanged);
+            // 
+            // txt_TJ
+            // 
+            this.txt_TJ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt_TJ.Location = new System.Drawing.Point(159, 387);
+            this.txt_TJ.Multiline = true;
+            this.txt_TJ.Name = "txt_TJ";
+            this.txt_TJ.ReadOnly = true;
+            this.txt_TJ.Size = new System.Drawing.Size(369, 84);
+            this.txt_TJ.TabIndex = 31;
+            // 
+            // label23
+            // 
+            this.label23.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(3, 361);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(150, 15);
+            this.label23.TabIndex = 51;
+            this.label23.Text = "扫不到蓝牙自动重启:";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label5
+            // 
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(108, 421);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(45, 15);
+            this.label5.TabIndex = 30;
+            this.label5.Text = "统计:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label24
+            // 
+            this.label24.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(534, 361);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(60, 15);
+            this.label24.TabIndex = 52;
+            this.label24.Text = "连续N次";
+            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btn_FlashTJ
+            // 
+            this.btn_FlashTJ.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btn_FlashTJ.Location = new System.Drawing.Point(534, 415);
+            this.btn_FlashTJ.Name = "btn_FlashTJ";
+            this.btn_FlashTJ.Size = new System.Drawing.Size(67, 27);
+            this.btn_FlashTJ.TabIndex = 29;
+            this.btn_FlashTJ.Text = "刷新";
+            this.btn_FlashTJ.UseVisualStyleBackColor = true;
+            this.btn_FlashTJ.Click += new System.EventHandler(this.btn_FlashTJ_Click);
             // 
             // uc_ConnDisConnTest
             // 
@@ -615,6 +677,7 @@
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_ReadCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_ReadDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmu_AutoRestartCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -660,5 +723,9 @@
         private System.Windows.Forms.NumericUpDown num_ReadDelay;
         private System.Windows.Forms.NumericUpDown num_ReadCount;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Button btn_Scan;
+        private System.Windows.Forms.NumericUpDown nmu_AutoRestartCount;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
     }
 }
